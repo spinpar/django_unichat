@@ -80,3 +80,45 @@ footer {
         justify-content: center;
     }
 }
+
+/* profile.css */
+
+.card {
+    border-radius: 16px;
+    background: #ffffff;
+    border: 1px solid #e6e6e6;
+    padding: 1.5rem;
+}
+
+h1.card-title {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: #0d6efd;
+}
+
+fieldset {
+    border: 1px solid #dee2e6;
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    background-color: #fafafa;
+    margin-bottom: 1.5rem;
+}
+
+legend {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #495057;
+    padding: 0 0.5rem;
+}
+
+form input, form select, form textarea {
+    border-radius: 8px !important;
+}
+
+button.btn-primary {
+    border-radius: 10px;
+    font-weight: 500;
+    padding: 0.6rem;
+    font-size: 1.05rem;
+}
+
