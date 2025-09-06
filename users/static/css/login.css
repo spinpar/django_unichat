@@ -148,3 +148,41 @@ body {
 .signup-link a:hover {
     text-decoration: underline;
 }
+
+/* Tema escuro */
+body.dark-theme {
+    background-color: #1a1a1a; /* Cor de fundo escura */
+    background-image: radial-gradient(circle, rgba(255, 255, 255, 0.1) 10%, transparent 10%), radial-gradient(circle, rgba(255, 255, 255, 0.1) 10%, transparent 10%);
+    color: #e0e0e0; /* Cor do texto clara */
+}
+
+/* Container do formulário no tema escuro */
+body.dark-theme .login-form-container {
+    background: rgba(50, 50, 50, 0.9); /* Fundo do formulário escuro e opaco */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Sombra mais suave */
+}
+
+/* Cores do texto no tema escuro */
+body.dark-theme .login-header h1,
+body.dark-theme .login-header p,
+body.dark-theme .login-form label,
+body.dark-theme .signup-link {
+    color: #e0e0e0; /* Cor do texto clara */
+}
+
+body.dark-theme .form-actions a {
+    color: #4dbdec; /* Cor do link no tema escuro */
+}
+
+body.dark-theme .form-actions a:hover {
+    text-decoration: underline; /* Efeito hover para links */
+}
+
+/* Estilos do botão no tema escuro */
+body.dark-theme .login-form button {
+    background: #4dbdec; /* Cor do botão no tema escuro */
+}
+
+body.dark-theme .login-form button:hover {
+    background: #3a9bbf; /* Cor do botão ao passar o mouse no tema escuro */
+}
