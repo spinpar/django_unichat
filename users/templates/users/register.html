@@ -70,37 +70,38 @@
             </div>
 
             <div class="form-group">
-                <label for="id_password1">Senha*</label>
-                {{ form.password }}
-                <ul id="password_rules_list" class="help-text" style="display:none;">
-                    <li>Min. 8 caracteres.</li>
-                    <li>Não pode ser muito parecida com suas informações pessoais.</li>
-                    <li>Não pode ser uma senha comum.</li>
-                    <li>Não pode ser inteiramente numérica.</li>
-                </ul>
-                {% if form.password.errors %}
-                <ul class="errorlist">
-                    {% for error in form.password.errors %}
-                    <li>{{ error }}</li>
-                    {% endfor %}
-                </ul>
-                {% endif %}
-            </div>
+    <label for="id_password1">Senha*</label>
+    {{ form.password1 }}
+    <ul id="password_rules_list" class="help-text" style="display:none;">
+        <li>Min. 8 caracteres.</li>
+        <li>Não pode ser muito parecida com suas informações pessoais.</li>
+        <li>Não pode ser uma senha comum.</li>
+        <li>Não pode ser inteiramente numérica.</li>
+    </ul>
+    {% if form.password1.errors %}
+    <ul class="errorlist">
+        {% for error in form.password1.errors %}
+        <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</div>
 
-            <div class="form-group">
-                <label for="id_password2">Confirmação de senha*</label>
-                {{ form.password2 }}
-                <p id="password2_help_text" class="help-text" style="display:none;">
-                    Digite a mesma senha novamente.
-                </p>
-                {% if form.password2.errors %}
-                <ul class="errorlist">
-                    {% for error in form.password2.errors %}
-                    <li>{{ error }}</li>
-                    {% endfor %}
-                </ul>
-                {% endif %}
-            </div>
+<div class="form-group">
+    <label for="id_password2">Confirmação de senha*</label>
+    {{ form.password2 }}
+    <p id="password2_help_text" class="help-text" style="display:none;">
+        Digite a mesma senha novamente.
+    </p>
+    {% if form.password2.errors %}
+    <ul class="errorlist">
+        {% for error in form.password2.errors %}
+        <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</div>
+
 
             
              {% for field in form %}
