@@ -12,8 +12,12 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background: #f5f6fa;
+    background-color: #ffffff; /* Cor de fundo base */
+    background-image: radial-gradient(circle, rgba(0, 0, 0, 0.1) 10%, transparent 10%), radial-gradient(circle, rgba(0, 0, 0, 0.1) 10%, transparent 10%);
+    background-size: 10px 10px; /* Tamanho do padrão ajustado para pontos menores */
+    background-position: 0 0, 5px 5px; /* Posição dos pontos ajustada */
 }
+
 
 /* Container do formulário */
 .login-form-container {
@@ -81,6 +85,15 @@ body {
     font-size: 0.85rem;
 }
 
+.form-actions div {
+    display: flex;
+    align-items: center; /* Alinha verticalmente o checkbox e o texto */
+}
+
+.form-actions input[type="checkbox"] {
+    margin-right: 5px; /* Espaço entre o checkbox e o texto */
+}
+
 .form-actions a {
     color: #04347c;
     text-decoration: none;
@@ -103,8 +116,22 @@ body {
     transition: background 0.3s;
 }
 
+/* Botão */
+.login-form button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: #04347c;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s; /* Adiciona transição para a cor e transformação */
+}
+
 .login-form button:hover {
     background: #032b5c;
+    transform: scale(1.05); /* Aumenta o botão levemente ao passar o mouse */
 }
 
 /* Link de cadastro */
@@ -114,7 +141,7 @@ body {
 }
 
 .signup-link a {
-    color: #f9d121;
+    color: #4dbdec;
     text-decoration: none;
 }
 
