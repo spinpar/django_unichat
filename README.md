@@ -23,7 +23,7 @@ Conectar estudantes e seus respectivos cursos em um único local, facilitando a 
 
 ## Installation
 
-Clone o repositório usando seu terminal: [Guia oficial de clonagem do GitHub](https://docs.github.com/pt/repositories/creating-and-managing-repositories/cloning-a-repository) usando o comando `git clone https://github.com/MattSouzaDev/unichat.git`, entre na pasta do projeto com `cd unichat`, crie um ambiente virtual com `python -m venv venv` (se já possui um ambiente virtual, adicione-o ao `.gitignore`) e instale Django e Pillow com `pip install Django Pillow`. Para mais informações sobre como instalar o Django, consulte a [Documentação](https://docs.djangoproject.com/en/5.2/intro/install/).
+Clone o repositório usando seu terminal: [Guia oficial de clonagem do GitHub](https://docs.github.com/pt/repositories/creating-and-managing-repositories/cloning-a-repository) usando o comando `git clone https://github.com/MattSouzaDev/unichat.git`, entre na pasta do projeto com `cd unichat`, crie um ambiente virtual com `python -m venv venv` (se já possui um ambiente virtual, adicione-o ao `.gitignore`) e instale Django e Pillow com `pip install Django Pillow django-crispy-forms`. Para mais informações sobre como instalar o Django, consulte a [Documentação](https://docs.djangoproject.com/en/5.2/intro/install/).
 
 ## Contribuidores
 
