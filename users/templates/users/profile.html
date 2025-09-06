@@ -9,13 +9,6 @@
 {% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <!-- Barra de pesquisa de usuários -->
-    <form method="get" action="{% url 'user_search' %}" class="mb-4 d-flex" style="max-width: 400px;">
-        <input type="text" name="q" class="form-control me-2" placeholder="Buscar usuários..." aria-label="Buscar usuários">
-        <button type="submit" class="btn btn-outline-primary"><i class="fas fa-search"></i></button>
-    </form>
-
     <div class="card shadow-sm p-4">
         <div class="d-flex justify-content-end mb-3">
             <a href="{% url 'profile_update' %}" class="btn btn-primary">
@@ -41,7 +34,7 @@
             </div>
         </div>
 
-        <p class="lead mb-4">{{ user.profile.bio|default:"Nenhuma bio adicionada ainda." }}</p>
+        <p class="lead mb-4">{{ user.profile.bio|default:"Adicione uma biografia" }}</p>
 
         <ul class="list-unstyled d-flex flex-wrap text-muted">
             {% if user.profile.location %}

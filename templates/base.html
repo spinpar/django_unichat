@@ -24,12 +24,11 @@
             </div>
 
             <div class="flex-fill mx-4">
-                <form role="search">
-                    <div class="input-group shadow-sm rounded">
-                        <span class="input-group-text bg-white border-end-0"><i class="fas fa-search"></i></span>
-                        <input type="search" class="form-control border-start-0" placeholder="Pesquisar pessoas, posts...">
-                    </div>
-                </form>
+               <!-- Barra de pesquisa de usuários -->
+    <form method="get" action="{% url 'user_search' %}" class="mb-4 d-flex" style="max-width: 800px;">
+        <input type="text" name="q" class="form-control me-2" placeholder="Buscar usuários..." aria-label="Busca usuários">
+        <button type="submit" class="btn btn-outline-primary"><i class="fas fa-search"></i></button>
+    </form>
             </div>
 
             <ul class="nav align-items-center gap-2 mb-0">
