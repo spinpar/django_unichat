@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Perfil - {{ user.username }}{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'users/css/profile.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Barra de pesquisa de usuários -->
+    <form method="get" action="{% url 'user_search' %}" class="mb-4 d-flex" style="max-width: 400px;">
+        <input type="text" name="q" class="form-control me-2" placeholder="Buscar usuários..." aria-label="Buscar usuários">
+        <button type="submit" class="btn btn-outline-primary"><i class="fas fa-search"></i></button>
+    </form>
+
+    <div class="card shadow-sm p-4">
+        <div class="d-flex justify-content-end mb-3">
+            <a href="{% url 'profile_update' %}" class="btn btn-primary">
+                <i class="fas fa-pencil-alt"></i> Editar perfil
+            </a>
+        </div>
+
+        <div class="d-flex align-items-center mb-4">
+            <div class="me-4">
+                {% if user.profile.avatar %}
+                    <img src="{{ user.profile.avatar.url }}" alt="Profile Avatar" class="rounded-circle" style="width: 120px; height: 120px; object-fit: cover;">
+                {% else %}
+                    <img src="{% static 'img/default_profile.png' %}" alt="Default Profile" class="rounded-circle" style="width: 120px; height: 120px; object-fit: cover;">
+                {% endif %}
+            </div>
+
+            <div>
+                <h1 class="h4 fw-bold mb-0">{{ user.first_name }} {{ user.last_name }}</h1>
+                <p class="text-muted mb-1">@{{ user.username }}</p>
+                {% if user.profile.course %}
+                    <p class="text-muted"><i class="fas fa-graduation-cap me-1"></i> {{ user.profile.course.name }}</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <p class="lead mb-4">{{ user.profile.bio|default:"Nenhuma bio adicionada ainda." }}</p>
+
+        <ul class="list-unstyled d-flex flex-wrap text-muted">
+            {% if user.profile.location %}
+            <li class="me-3 mb-2">
+                <i class="fas fa-map-marker-alt me-1"></i> {{ user.profile.location }}
+            </li>
+            {% endif %}
+            
+            {% if user.profile.website %}
+            <li class="me-3 mb-2">
+                <i class="fas fa-link me-1"></i> <a href="{{ user.profile.website }}" class="text-decoration-none">{{ user.profile.website }}</a>
+            </li>
+            {% endif %}
+
+            {% if age is not None %}
+            <li class="me-3 mb-2">
+                <i class="fas fa-birthday-cake me-1"></i> {{ age }} anos
+            </li>
+            {% endif %}
+            
+            <li class="me-3 mb-2">
+                <i class="far fa-calendar-alt me-1"></i> Ingressou em {{ user.date_joined|date:"F Y" }}
+            </li>
+        </ul>
+
+    </div>
+</div>
+{% endblock %}

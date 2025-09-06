@@ -1,0 +1,123 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Fundo da página */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #f5f6fa;
+}
+
+/* Container do formulário */
+.login-form-container {
+    background: #ffffff;
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+/* Header */
+.login-header img.small-logo {
+    width: 80px;
+    margin-bottom: 15px;
+}
+
+.login-header h1 {
+    font-size: 1.8rem;
+    margin-bottom: 5px;
+    color: #04347c;
+}
+
+.login-header p {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 25px;
+}
+
+/* Formulário */
+.login-form .form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.login-form label {
+    display: block;
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.login-form input[type="text"],
+.login-form input[type="password"] {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 0.95rem;
+}
+
+.login-form input[type="text"]:focus,
+.login-form input[type="password"]:focus {
+    border-color: #04347c;
+    outline: none;
+}
+
+/* Lembrar e link */
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    font-size: 0.85rem;
+}
+
+.form-actions a {
+    color: #04347c;
+    text-decoration: none;
+}
+
+.form-actions a:hover {
+    text-decoration: underline;
+}
+
+/* Botão */
+.login-form button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: #04347c;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.login-form button:hover {
+    background: #032b5c;
+}
+
+/* Link de cadastro */
+.signup-link {
+    font-size: 0.85rem;
+    margin-top: 15px;
+}
+
+.signup-link a {
+    color: #f9d121;
+    text-decoration: none;
+}
+
+.signup-link a:hover {
+    text-decoration: underline;
+}

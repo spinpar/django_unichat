@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Atualizar Perfil{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm p-4">
+                <h1 class="card-title text-center mb-4">Atualizar Perfil</h1>
+
+               <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <fieldset class="mb-4">
+        <legend class="border-bottom pb-2 mb-3">Informações do Usuário</legend>
+        {{ u_form.as_p }}
+    </fieldset>
+
+    <fieldset class="mb-4">
+        <legend class="border-bottom pb-2 mb-3">Informações do Perfil</legend>
+        {{ p_form.as_p }}
+    </fieldset>
+
+    <button type="submit" class="btn btn-primary d-block w-100">Atualizar</button>
+</form>
+
+                <div class="mt-3 text-center">
+                    <a href="{% url 'profile' %}">Voltar para o Perfil</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

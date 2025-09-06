@@ -1,0 +1,16 @@
+{% if query %}
+    <h2>Resultados para "{{ query }}"</h2>
+    {% if results %}
+        <ul>
+        {% for user in results %}
+            <li>
+                <a href="{% url 'user_profile' user.username %}">{{ user.username }} ({{ user.get_full_name }})</a>
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>Nenhum usuário encontrado.</p>
+    {% endif %}
+{% else %}
+    <p>Digite um nome de usuário ou nome para buscar.</p>
+{% endif %}

@@ -1,0 +1,234 @@
+/* LOGIN FORM */
+
+.login {
+    background: var(--darkened-bg);
+    height: auto;
+}
+
+.login #header {
+    height: auto;
+    padding: 15px 16px;
+    justify-content: center;
+}
+
+.login #header h1 {
+    font-size: 1.125rem;
+    margin: 0;
+}
+
+.login #header h1 a {
+    color: var(--header-link-color);
+}
+
+.login #content {
+    padding: 20px;
+}
+
+.login #container {
+    background: var(--body-bg);
+    border: 1px solid var(--hairline-color);
+    border-radius: 4px;
+    overflow: hidden;
+    width: 28em;
+    min-width: 300px;
+    margin: 100px auto;
+    height: auto;
+}
+
+.login .form-row {
+    padding: 4px 0;
+}
+
+.login .form-row label {
+    display: block;
+    line-height: 2em;
+}
+
+.login .form-row #id_username, .login .form-row #id_password {
+    padding: 8px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.login .submit-row {
+    padding: 1em 0 0 0;
+    margin: 0;
+    text-align: center;
+}
+
+.login .password-reset-link {
+    text-align: center;
+}
+:root {
+    --primary-color: #04347c;
+    --secondary-color: #f9d121;
+    --bg-color: #ffffff;
+    --text-color: #333;
+    --text-muted: #666;
+    --shadow-light: rgba(0, 0, 0, 0.08);
+    --shadow-dark: rgba(0, 0, 0, 0.2);
+    --border-radius: 16px;
+    --transition-speed: 0.3s;
+    --font-base: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    height: 100%;
+    font-family: var(--font-base);
+    background: linear-gradient(135deg, #04347c, #0a66c2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ============================= */
+/* Container de login             */
+/* ============================= */
+.login-container {
+    width: 100%;
+    max-width: 400px;
+    background-color: var(--bg-color);
+    border-radius: var(--border-radius);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    padding: 50px 30px;
+}
+
+/* ============================= */
+/* Header                         */
+/* ============================= */
+.login-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.login-header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 5px;
+}
+
+.login-header h2 {
+    font-size: 1rem;
+    color: var(--text-muted);
+}
+
+/* ============================= */
+/* Formulário                     */
+/* ============================= */
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.login-form label {
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 5px;
+}
+
+.login-form input {
+    padding: 14px;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    font-size: 1em;
+    box-shadow: 0 4px 8px var(--shadow-light);
+    transition: 0.3s;
+}
+
+.login-form input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 4px rgba(4,52,124,0.15);
+}
+
+/* ============================= */
+/* Botão de login                 */
+/* ============================= */
+.login-button {
+    width: 100%;
+    padding: 16px;
+    background-color: var(--primary-color);
+    color: #fff;
+    font-size: 1.1em;
+    font-weight: 700;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color var(--transition-speed), transform 0.2s;
+}
+
+.login-button:hover {
+    background-color: #032b60;
+    transform: translateY(-2px);
+}
+
+/* ============================= */
+/* Lembrar senha e links          */
+/* ============================= */
+.form-group-flex {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9em;
+    color: var(--text-muted);
+}
+
+.signup-link {
+    text-align: center;
+    font-size: 0.95em;
+    color: var(--text-muted);
+    margin-top: 20px;
+}
+
+.signup-link a {
+    color: var(--primary-color);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.signup-link a:hover {
+    text-decoration: underline;
+}
+
+/* ============================= */
+/* Divider "ou"                   */
+/* ============================= */
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #888;
+    margin: 30px 0;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #ddd;
+}
+
+.divider:not(:empty)::before {
+    margin-right: 0.5em;
+}
+
+.divider:not(:empty)::after {
+    margin-left: 0.5em;
+}
+
+/* ============================= */
+/* Responsividade                 */
+/* ============================= */
+@media (max-width: 500px) {
+    .login-container {
+        padding: 40px 20px;
+        width: 90%;
+    }
+}

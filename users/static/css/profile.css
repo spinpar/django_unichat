@@ -1,0 +1,198 @@
+/* ============================= */
+/* Estilos para o Perfil         */
+/* ============================= */
+
+.profile-container {
+    width: 100%;
+    max-width: 1000px;
+    margin: -20px auto 40px auto; /* centralizado e com margem inferior */
+    padding: 0 15px;
+}
+
+/* Seção da capa */
+.profile-cover-section {
+    position: relative;
+    width: 100%;
+    height: 220px; /* maior e mais elegante */
+    background-color: #f0f2f5;
+    border-radius: 15px 15px 0 0;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.profile-cover {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.profile-cover-section:hover .profile-cover {
+    transform: scale(1.05);
+}
+
+/* Avatar */
+.profile-avatar-container {
+    position: absolute;
+    bottom: -60px;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid #fff;
+    border-radius: 50%;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+    background-color: #fff;
+}
+
+.profile-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Botão de editar capa */
+.edit-cover-button {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    padding: 8px 12px;
+    background-color: rgba(0,0,0,0.6);
+    color: #fff;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.edit-cover-button:hover {
+    background-color: rgba(0,0,0,0.8);
+}
+
+/* Seção de informações */
+.profile-info-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding-top: 70px; /* espaço para avatar */
+    padding-bottom: 20px;
+    background-color: #fff;
+    border-radius: 0 0 15px 15px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.06);
+    margin-bottom: 20px;
+}
+
+/* Header do perfil */
+.profile-header h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+    color: #212529;
+}
+
+.profile-header p {
+    color: #6c757d;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+/* Estatísticas */
+.profile-stats {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin: 15px 0;
+    flex-wrap: wrap;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-weight: 500;
+    color: #495057;
+}
+
+.stat-item span {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+/* Ações do perfil */
+.profile-actions {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.profile-actions .btn {
+    margin: 5px;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, transform 0.2s;
+}
+
+.profile-actions .btn:hover {
+    transform: translateY(-2px);
+}
+
+/* Navegação do perfil */
+.profile-nav {
+    display: flex;
+    border-bottom: 2px solid #e9ecef;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.profile-nav .nav-link {
+    color: #495057;
+    border: none;
+    font-weight: 500;
+    padding: 10px 20px;
+    transition: color 0.3s ease, border-bottom 0.3s ease;
+}
+
+.profile-nav .nav-link.active {
+    color: #0d6efd;
+    border-bottom: 2px solid #0d6efd;
+    background-color: transparent;
+}
+
+/* ============================= */
+/* Responsividade                */
+/* ============================= */
+@media (max-width: 768px) {
+    .profile-cover-section {
+        height: 180px;
+    }
+
+    .profile-avatar-container {
+        bottom: -50px;
+    }
+
+    .profile-avatar {
+        width: 100px;
+        height: 100px;
+    }
+
+    .profile-header h2 {
+        font-size: 1.6rem;
+    }
+
+    .profile-stats {
+        gap: 15px;
+    }
+
+    .profile-actions .btn {
+        padding: 6px 12px;
+        font-size: 0.85rem;
+    }
+
+    .profile-nav .nav-link {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+    }
+}

@@ -1,0 +1,82 @@
+/* ============================= */
+/* Estilos Base UniChat          */
+/* ============================= */
+
+/* Remove fundo azul ou cores pesadas */
+body {
+    background-color: #f8f9fa;
+    font-family: 'Arial', sans-serif;
+    color: #212529;
+}
+
+/* Header */
+.header-principal {
+    background-color: #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+/* Navbar links */
+.nav-link {
+    color: #495057;
+    font-weight: 500;
+}
+
+.nav-link:hover {
+    color: #0d6efd;
+}
+
+/* Botões */
+.btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #0b5ed7;
+    border-color: #0b5ed7;
+}
+
+.btn-outline-primary {
+    color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.btn-outline-primary:hover {
+    background-color: #0d6efd;
+    color: #fff;
+}
+
+/* Search bar */
+.input-group .form-control {
+    border-radius: 0 0.375rem 0.375rem 0;
+}
+
+.input-group .input-group-text {
+    border-radius: 0.375rem 0 0 0.375rem;
+}
+
+/* Footer */
+footer {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .header-principal nav {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .flex-fill.mx-4 {
+        margin: 10px 0;
+    }
+
+    .nav.align-items-center {
+        justify-content: center;
+    }
+}

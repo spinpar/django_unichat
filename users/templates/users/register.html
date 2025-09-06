@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registro - UniChat</title>
+{% load static %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="{% static 'css/register.css' %}">
+</head>
+
+<body>
+<div class="login-container">
+    <div class="login-left-side">
+        <div id="carouselSlides" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="{% static 'img/jovens.png' %}" class="d-block w-100" alt="Slide 1">
+                </div>
+                <div class="carousel-item">
+                    <img src="{% static 'img/jovens2.png' %}" class="d-block w-100" alt="Slide 2">
+                </div>
+                <div class="carousel-item">
+                    <img src="{% static 'img/jovens3.png' %}" class="d-block w-100" alt="Slide 3">
+                </div>
+            </div>
+        </div>
+        <div class="fixed-caption">
+            <h5>Conecte-se à sua Universidade</h5>
+        </div>
+    </div>
+
+        <div class="login-right-side">
+        <div class="login-header text-center">
+            <img src="{% static 'img/logo.png' %}" alt="UniChat Logo" class="small-logo">
+            <h1>UniChat</h1>
+            <h2>Crie sua conta</h2>
+        </div>
+
+    <form method="post" class="register-form" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+        <div class="alert alert-danger">
+            {% for error in form.non_field_errors %}
+                {{ error }}
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="form-group">
+            <label for="id_username">Nome de usuário*</label>
+            {{ form.username }}
+            <p id="username_help_text" class="help-text" style="display:none;">
+                É obrigatório um mínimo de 150 caracteres. Letras, dígitos e @/./+/-/_ apenas.
+            </p>
+            {% if form.username.errors %}
+            <ul class="errorlist">
+                {% for error in form.username.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="id_password1">Senha*</label>
+            {{ form.password1 }}
+            <ul id="password_rules_list" class="help-text" style="display:none;">
+                <li>Sua senha não pode ser muito parecida com suas outras informações pessoais.</li>
+                <li>Sua senha deve conter pelo menos 8 caracteres.</li>
+                <li>Sua senha não pode ser uma senha comumente usada.</li>
+                <li>Sua senha não pode ser inteiramente numérica.</li>
+            </ul>
+            {% if form.password1.errors %}
+            <ul class="errorlist">
+                {% for error in form.password1.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_password2">Confirmação de senha*</label>
+            {{ form.password2 }}
+            <p id="password2_help_text" class="help-text" style="display:none;">
+                Digite a mesma senha novamente.
+            </p>
+            {% if form.password2.errors %}
+            <ul class="errorlist">
+                {% for error in form.password2.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+
+        {% for field in form %}
+            {% if field.name != "avatar" and field.name != "username" and field.name != "password1" and field.name != "password2" %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %}*{% endif %}</label>
+                    {% if field.name == "birth_date" %}
+                        <div class="custom-date">{{ field }}</div>
+                    {% else %}
+                        {{ field }}
+                    {% endif %}
+                    {% if field.errors %}
+                    <ul class="errorlist">
+                        {% for error in field.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+            {% endif %}
+        {% endfor %}
+        
+                <div class="form-group">
+            <label for="{{ form.avatar.id_for_label }}">Foto de Perfil</label>
+            <div class="file-input-wrapper">
+                {{ form.avatar }}
+                <div class="upload-icon">
+                    <i class="fas fa-camera"></i>
+                </div>
+            </div>
+        <img id="preview" src="" alt="Preview">
+        </div>
+
+        <button type="submit">Registrar</button>
+    </form>
+
+        <div class="divider"><span>ou</span></div>
+
+        <p class="signup-link">Já tem uma conta? <a href="{% url 'login' %}">Entrar</a></p>
+    </div>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const fileInput = document.querySelector('input[type="file"]');
+const preview = document.getElementById('preview');
+
+fileInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if(file){
+        preview.src = URL.createObjectURL(file);
+        preview.style.display = 'block';
+        preview.style.borderRadius = '50%';
+        preview.style.width = '120px';
+        preview.style.height = '120px';
+        preview.style.objectFit = 'cover';
+        preview.style.marginTop = '10px';
+    }
+});
+</script>
+<script>
+    const passwordInput = document.getElementById('id_password1');
+    const passwordRulesList = document.getElementById('password_rules_list');
+    
+    const usernameInput = document.getElementById('id_username');
+    const usernameHelpText = document.getElementById('username_help_text');
+    
+    const password2Input = document.getElementById('id_password2');
+    const password2HelpText = document.getElementById('password2_help_text');
+
+    // Eventos para o campo Nome de usuário
+    if (usernameInput && usernameHelpText) {
+        usernameInput.addEventListener('focus', () => {
+            usernameHelpText.style.display = 'block';
+        });
+        usernameInput.addEventListener('blur', () => {
+            setTimeout(() => {
+                usernameHelpText.style.display = 'none';
+            }, 100);
+        });
+    }
+
+    // Eventos para o campo Senha
+    if (passwordInput && passwordRulesList) {
+        passwordInput.addEventListener('focus', () => {
+            passwordRulesList.style.display = 'block';
+        });
+
+        passwordInput.addEventListener('blur', () => {
+            setTimeout(() => {
+                passwordRulesList.style.display = 'none';
+            }, 100); 
+        });
+    }
+
+    // Eventos para o campo Confirmação de senha
+    if (password2Input && password2HelpText) {
+        password2Input.addEventListener('focus', () => {
+            password2HelpText.style.display = 'block';
+        });
+
+        password2Input.addEventListener('blur', () => {
+            setTimeout(() => {
+                password2HelpText.style.display = 'none';
+            }, 100);
+        });
+    }
+</script>
+</body>
+</html>
