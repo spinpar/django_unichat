@@ -44,231 +44,150 @@
         </div>
 
         <form method="post" class="register-form" enctype="multipart/form-data">
-    {% csrf_token %}
-    
-    {% if form.non_field_errors %}
-    <div class="alert alert-danger">
-        {% for error in form.non_field_errors %}
-            {{ error }}
-        {% endfor %}
-    </div>
-    {% endif %}
+            {% csrf_token %}
 
-    <div class="form-group">
-        <label for="id_username">Nome de usuário*</label>
-        {{ form.username }}
-        <p id="username_help_text" class="help-text" style="display:none;">
-            Mínimo de 150 caracteres. Apenas letras, dígitos e @/./+/-/_.
-        </p>
-        {% if form.username.errors %}
-        <ul class="errorlist">
-            {% for error in form.username.errors %}
-            <li>{{ error }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-    </div>
-
-    <div class="form-group">
-        <label for="id_password1">Senha*</label>
-        {{ form.password1 }}
-        <ul id="password_rules_list" class="help-text" style="display:none;">
-            <li>Min. 8 caracteres.</li>
-            <li>Não pode ser muito parecida com suas informações pessoais.</li>
-            <li>Não pode ser uma senha comum.</li>
-            <li>Não pode ser inteiramente numérica.</li>
-        </ul>
-        {% if form.password1.errors %}
-        <ul class="errorlist">
-            {% for error in form.password1.errors %}
-            <li>{{ error }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-    </div>
-
-    <div class="form-group">
-        <label for="id_password2">Confirmação de senha*</label>
-        {{ form.password2 }}
-        <p id="password2_help_text" class="help-text" style="display:none;">
-            Digite a mesma senha novamente.
-        </p>
-        {% if form.password2.errors %}
-        <ul class="errorlist">
-            {% for error in form.password2.errors %}
-            <li>{{ error }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-    </div>
-
-    <!-- Aqui começaria o loop para os outros campos -->
-    {<form method="post" class="register-form" enctype="multipart/form-data">
-    {% csrf_token %}
-    
-    {% if form.non_field_errors %}
-    <div class="alert alert-danger">
-        {% for error in form.non_field_errors %}
-            {{ error }}
-        {% endfor %}
-    </div>
-    {% endif %}
-
-    <div class="form-group">
-        <label for="id_username">Nome de usuário*</label>
-        {{ form.username }}
-        <p id="username_help_text" class="help-text" style="display:none;">
-            Mínimo de 150 caracteres. Apenas letras, dígitos e @/./+/-/_.
-        </p>
-        {% if form.username.errors %}
-        <ul class="errorlist">
-            {% for error in form.username.errors %}
-            <li>{{ error }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-    </div>
-
-    <div class="form-group">
-        <label for="id_password1">Senha*</label>
-        {{ form.password1 }}
-        <ul id="password_rules_list" class="help-text" style="display:none;">
-            <li>Min. 8 caracteres.</li>
-            <li>Não pode ser muito parecida com suas informações pessoais.</li>
-            <li>Não pode ser uma senha comum.</li>
-            <li>Não pode ser inteiramente numérica.</li>
-        </ul>
-        {% if form.password1.errors %}
-        <ul class="errorlist">
-            {% for error in form.password1.errors %}
-            <li>{{ error }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-    </div>
-
-    <div class="form-group">
-        <label for="id_password2">Confirmação de senha*</label>
-        {{ form.password2 }}
-        <p id="password2_help_text" class="help-text" style="display:none;">
-            Digite a mesma senha novamente.
-        </p>
-        {% if form.password2.errors %}
-        <ul class="errorlist">
-            {% for error in form.password2.errors %}
-            <li>{{ error }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-    </div>
-
-    <!-- Aqui começaria o loop para os outros campos -->
-    {% for field in form %}
-        {% if field.name != 'password1' and field.name != 'password2' and field.name != 'username' %}
-        <div class="form-group">
-            <label for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %}*{% endif %}</label>
-            {% if field.name == "birth_date" %}
-                <div class="custom-date">{{ field }}</div>
-            {% else %}
-                {{ field }}
-            {% endif %}
-            {% if field.errors %}
-            <ul class="errorlist">
-                {% for error in field.errors %}
-                <li>{{ error }}</li>
+            {% if form.non_field_errors %}
+            <div class="alert alert-danger">
+                {% for error in form.non_field_errors %}
+                    {{ error }}
                 {% endfor %}
-            </ul>
-            {% endif %}
-        </div>
-        {% endif %}
-    {% endfor %}
-
-    <!-- Upload de avatar -->
-    <div class="form-group">
-        <label for="{{ form.avatar.id_for_label }}">Foto de Perfil</label>
-        <div class="file-input-wrapper">
-            {{ form.avatar }}
-            <div class="upload-icon">
-                <i class="fas fa-camera"></i>
             </div>
-        </div>
-        <img id="preview" src="" alt="Preview">
-    </div>
+            {% endif %}
 
-    <button type="submit">Registrar</button>
-</form>
+            <!-- Campo Nome de usuário -->
+            <div class="form-group">
+                <label for="id_username">Nome de usuário*</label>
+                {{ form.username }}
+                <p id="username_help_text" class="help-text" style="display:none;">
+                    Mínimo de 150 caracteres. Apenas letras, dígitos e @/./+/-/_.
+                </p>
+                {% if form.username.errors %}
+                <ul class="errorlist">
+                    {% for error in form.username.errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
 
+            <!-- Campo Senha -->
+            <div class="form-group">
+                <label for="id_password1">Senha*</label>
+                {{ form.password1 }}
+                <ul id="password_rules_list" class="help-text" style="display:none;">
+                    <li>Min. 8 caracteres.</li>
+                    <li>Não pode ser muito parecida com suas informações pessoais.</li>
+                    <li>Não pode ser uma senha comum.</li>
+                    <li>Não pode ser inteiramente numérica.</li>
+                </ul>
+                {% if form.password1.errors %}
+                <ul class="errorlist">
+                    {% for error in form.password1.errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+
+            <!-- Confirmação de senha -->
+            <div class="form-group">
+                <label for="id_password2">Confirmação de senha*</label>
+                {{ form.password2 }}
+                <p id="password2_help_text" class="help-text" style="display:none;">
+                    Digite a mesma senha novamente.
+                </p>
+                {% if form.password2.errors %}
+                <ul class="errorlist">
+                    {% for error in form.password2.errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+
+            <!-- Outros campos do formulário -->
+            {% for field in form %}
+                {% if field.name != 'username' and field.name != 'password1' and field.name != 'password2' %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %}*{% endif %}</label>
+                    {% if field.name == "birth_date" %}
+                        <div class="custom-date">{{ field }}</div>
+                    {% else %}
+                        {{ field }}
+                    {% endif %}
+                    {% if field.errors %}
+                    <ul class="errorlist">
+                        {% for error in field.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+                {% endif %}
+            {% endfor %}
+
+            <!-- Upload de avatar -->
+            <div class="form-group">
+                <label for="{{ form.avatar.id_for_label }}">Foto de Perfil</label>
+                <div class="file-input-wrapper">
+                    {{ form.avatar }}
+                    <div class="upload-icon">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                </div>
+                <img id="preview" src="" alt="Preview" style="display:none;">
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 mt-3">Registrar</button>
+        </form>
 
         <div class="divider"><span>ou</span></div>
 
-        <p class="signup-link">Já tem uma conta? <a href="{% url 'login' %}">Entrar</a></p>
+        <p class="signup-link text-center">Já tem uma conta? <a href="{% url 'login' %}">Entrar</a></p>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-const fileInput = document.querySelector('input[type="file"]');
-const preview = document.getElementById('preview');
 
-fileInput.addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    if(file){
-        preview.src = URL.createObjectURL(file);
-        preview.style.display = 'block';
-        preview.style.borderRadius = '50%';
-        preview.style.width = '120px';
-        preview.style.height = '120px';
-        preview.style.objectFit = 'cover';
-        preview.style.marginTop = '10px';
-    }
-});
-</script>
 <script>
+    // Preview da imagem
+    const fileInput = document.querySelector('input[type="file"]');
+    const preview = document.getElementById('preview');
+
+    fileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if(file){
+            preview.src = URL.createObjectURL(file);
+            preview.style.display = 'block';
+            preview.style.borderRadius = '50%';
+            preview.style.width = '120px';
+            preview.style.height = '120px';
+            preview.style.objectFit = 'cover';
+            preview.style.marginTop = '10px';
+        }
+    });
+
+    // Mostrar/ocultar dicas de campos
     const passwordInput = document.getElementById('id_password1');
     const passwordRulesList = document.getElementById('password_rules_list');
-    
     const usernameInput = document.getElementById('id_username');
     const usernameHelpText = document.getElementById('username_help_text');
-    
     const password2Input = document.getElementById('id_password2');
     const password2HelpText = document.getElementById('password2_help_text');
 
-    // Eventos para o campo Nome de usuário
     if (usernameInput && usernameHelpText) {
-        usernameInput.addEventListener('focus', () => {
-            usernameHelpText.style.display = 'block';
-        });
-        usernameInput.addEventListener('blur', () => {
-            setTimeout(() => {
-                usernameHelpText.style.display = 'none';
-            }, 100);
-        });
+        usernameInput.addEventListener('focus', () => { usernameHelpText.style.display = 'block'; });
+        usernameInput.addEventListener('blur', () => { setTimeout(() => { usernameHelpText.style.display = 'none'; }, 100); });
     }
 
-    // Eventos para o campo Senha
     if (passwordInput && passwordRulesList) {
-        passwordInput.addEventListener('focus', () => {
-            passwordRulesList.style.display = 'block';
-        });
-
-        passwordInput.addEventListener('blur', () => {
-            setTimeout(() => {
-                passwordRulesList.style.display = 'none';
-            }, 100); 
-        });
+        passwordInput.addEventListener('focus', () => { passwordRulesList.style.display = 'block'; });
+        passwordInput.addEventListener('blur', () => { setTimeout(() => { passwordRulesList.style.display = 'none'; }, 100); });
     }
 
-    // Eventos para o campo Confirmação de senha
     if (password2Input && password2HelpText) {
-        password2Input.addEventListener('focus', () => {
-            password2HelpText.style.display = 'block';
-        });
-
-        password2Input.addEventListener('blur', () => {
-            setTimeout(() => {
-                password2HelpText.style.display = 'none';
-            }, 100);
-        });
+        password2Input.addEventListener('focus', () => { password2HelpText.style.display = 'block'; });
+        password2Input.addEventListener('blur', () => { setTimeout(() => { password2HelpText.style.display = 'none'; }, 100); });
     }
 </script>
 </body>
