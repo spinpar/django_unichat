@@ -1,10 +1,12 @@
+# unichat/urls.py
+
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic import RedirectView
 
-# Importa as views do seu app 'users'
+# Importa as views dos apps
 from users import views as user_views
 
 urlpatterns = [
@@ -14,11 +16,14 @@ urlpatterns = [
     # URL principal que aponta para a home page
     path('', user_views.home, name='home'),
     
-    # URLs do seu app 'users' (agora a home faz parte do users.urls)
+    # URLs do seu app 'users'
     path('', include('users.urls')),
 
     # URLs do seu app 'searchcontent'
     path('search/', include('searchcontent.urls')),
+
+    # URLs do seu app 'posts'
+    path('posts/', include('posts.urls', namespace='posts')),
     
     # URL do painel de administração
     path('admin/', admin.site.urls),

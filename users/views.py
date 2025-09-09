@@ -7,7 +7,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .forms import UserRegisterForm, ProfileUpdateForm, UserUpdateForm
 from .models import Profile
-from django.db.models import F
+from django.db.models import F, Count, Q
+from posts.models import Post, Vote
+from posts.forms import PostForm
 
 def register(request):
     if request.method == 'POST':
@@ -159,9 +161,29 @@ def get_follow_list(request, username, list_type):
 
     return JsonResponse({'users': user_list})
 
+
 @login_required
 def home(request):
-    """
-    Renderiza a página inicial para usuários logados.
-    """
-    return render(request, 'home.html')
+    if request.method == 'POST':
+        form = PostForm(request.POST, request.FILES)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user
+            post.save()
+            return redirect('home')
+    else:
+        form = PostForm()
+
+    posts = Post.objects.select_related('author__profile').prefetch_related(
+        'comments__author__profile',
+        'comments__replies__author__profile'
+    ).annotate(
+        likes_count=Count('votes', filter=Q(votes__vote_type='like')),
+        dislikes_count=Count('votes', filter=Q(votes__vote_type='dislike'))
+    ).order_by('-created_at')
+
+    context = {
+        'posts': posts,
+        'form': form
+    }
+    return render(request, 'home.html', context)

@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'searchcontent.apps.SearchcontentConfig',
     "crispy_forms",
     "crispy_bootstrap5",
+    "posts.apps.PostsConfig",
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
