@@ -17,49 +17,53 @@
 
     <!-- Header -->
     <header class="header-principal bg-white shadow-sm">
-        <nav class="d-flex align-items-center justify-content-between container py-2">
-            <div class="d-flex align-items-center">
-                <img src="{% static 'img/logo.png' %}" alt="Logo" width="50" height="50" class="me-2">
-                <span class="fs-4 fw-bold text-primary">UniChat</span>
-            </div>
+    <nav class="d-flex align-items-center justify-content-between container py-2">
+        <div class="d-flex align-items-center">
+            <img src="{% static 'img/logo.png' %}" alt="Logo" width="50" height="50" class="me-2">
+            <span class="fs-4 fw-bold text-primary">UniChat</span>
+        </div>
 
-            <div class="flex-fill mx-4">
-               <!-- Barra de pesquisa de usuários -->
-    <form method="get" action="{% url 'user_search' %}" class="mb-4 d-flex" style="max-width: 800px;">
-        <input type="text" name="q" class="form-control me-2" placeholder="Buscar usuários..." aria-label="Busca usuários">
-        <button type="submit" class="btn btn-outline-primary"><i class="fas fa-search"></i></button>
-    </form>
+        <div class="flex-fill mx-4" style="position: relative;">
+            <div class="d-flex align-items-center" style="max-width: 800px;">
+                <input type="text" id="search-input" name="q" class="form-control me-2" placeholder="Buscar usuários..." aria-label="Busca usuários">
+                <button type="submit" id="search-button" class="btn btn-outline-primary"><i class="fas fa-search"></i></button>
             </div>
+            
+            <div id="search-results-container" class="list-group position-absolute w-100" style="z-index: 1000; top: 100%; display: none;">
+                </div>
+        </div>
 
-            <ul class="nav align-items-center gap-2 mb-0">
-                {% if user.is_authenticated %}
-                <li class="nav-item">
-                    <a href="#" class="nav-link position-relative"><i class="fas fa-bell fa-lg"></i></a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link position-relative"><i class="fas fa-comment-dots fa-lg"></i></a>
-                </li>
-                <li class="nav-item d-flex align-items-center gap-2">
+        <ul class="nav align-items-center gap-2 mb-0">
+            {% if user.is_authenticated %}
+            <li class="nav-item">
+                <a href="#" class="nav-link position-relative"><i class="fas fa-bell fa-lg"></i></a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link position-relative"><i class="fas fa-comment-dots fa-lg"></i></a>
+            </li>
+            <li class="nav-item d-flex align-items-center gap-2">
+                <a class="nav-link d-flex align-items-center gap-2" href="{% url 'profile' %}">
                     <img src="{% if user.profile.avatar %}{{ user.profile.avatar.url }}{% else %}{% static 'img/default_profile.png' %}{% endif %}" alt="Foto de Perfil" width="40" height="40" class="rounded-circle">
                     <span>{{ user.username }}</span>
-                </li>
-                <li class="nav-item">
-                    <form action="{% url 'logout' %}" method="post" class="m-0">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-outline-danger btn-sm">Sair</button>
-                    </form>
-                </li>
-                {% else %}
-                <li class="nav-item">
-                    <a href="{% url 'login' %}" class="btn btn-outline-primary btn-sm me-2">Entrar</a>
-                </li>
-                <li class="nav-item">
-                    <a href="{% url 'register' %}" class="btn btn-primary btn-sm">Cadastro</a>
-                </li>
-                {% endif %}
-            </ul>
-        </nav>
-    </header>
+                </a>
+            </li>
+            <li class="nav-item">
+                <form action="{% url 'logout' %}" method="post" class="m-0">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-danger btn-sm">Sair</button>
+                </form>
+            </li>
+            {% else %}
+            <li class="nav-item">
+                <a href="{% url 'login' %}" class="btn btn-outline-primary btn-sm me-2">Entrar</a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'register' %}" class="btn btn-primary btn-sm">Cadastro</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+</header>
 
     <!-- Conteúdo principal -->
     <main class="container my-4 flex-fill">
@@ -73,6 +77,97 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 <script src="{% static 'js/main.js' %}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('search-input');
+    const searchResultsContainer = document.getElementById('search-results-container');
+    const searchButton = document.getElementById('search-button');
+    let searchTimeout;
+
+    if (searchInput && searchResultsContainer) {
+        function fetchUsers(query) {
+            if (query.length < 2) {
+                searchResultsContainer.style.display = 'none';
+                return;
+            }
+
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                fetch(`{% url 'user_search' %}?q=${query}`, {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    searchResultsContainer.innerHTML = '';
+                    if (data.users.length > 0) {
+                        data.users.forEach(user => {
+                            const resultItem = document.createElement('a');
+                            resultItem.href = `/profile/${user.username}/`;
+                            resultItem.className = 'list-group-item list-group-item-action d-flex align-items-center';
+
+                            const avatar = document.createElement('img');
+                            avatar.src = user.avatar_url;
+                            avatar.className = 'rounded-circle me-3';
+                            avatar.style.width = '40px';
+                            avatar.style.height = '40px';
+                            avatar.style.objectFit = 'cover';
+
+                            const userInfo = document.createElement('div');
+                            userInfo.innerHTML = `
+                                <h6 class="mb-0">${user.first_name} ${user.last_name}</h6>
+                                <small class="text-muted">@${user.username}</small>
+                            `;
+
+                            resultItem.appendChild(avatar);
+                            resultItem.appendChild(userInfo);
+                            searchResultsContainer.appendChild(resultItem);
+                        });
+
+                        // Adiciona o link "Ver mais resultados"
+                        const moreResultsLink = document.createElement('a');
+                        moreResultsLink.href = `{% url 'user_search' %}?q=${query}`;
+                        moreResultsLink.className = 'list-group-item list-group-item-action text-center text-primary fw-bold';
+                        moreResultsLink.textContent = 'Ver mais resultados...';
+                        searchResultsContainer.appendChild(moreResultsLink);
+                        
+                        searchResultsContainer.style.display = 'block';
+                    } else {
+                        // Se não houver resultados
+                        const noResults = document.createElement('div');
+                        noResults.className = 'list-group-item text-center text-muted';
+                        noResults.textContent = 'Nenhum resultado encontrado.';
+                        searchResultsContainer.appendChild(noResults);
+                        searchResultsContainer.style.display = 'block';
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro na busca:', error);
+                    searchResultsContainer.style.display = 'none';
+                });
+            }, 300);
+        }
+
+        searchInput.addEventListener('input', (event) => {
+            fetchUsers(event.target.value);
+        });
+
+        if (searchButton) {
+            searchButton.addEventListener('click', (event) => {
+                event.preventDefault();
+                window.location.href = `{% url 'user_search' %}?q=${searchInput.value}`;
+            });
+        }
+
+        document.addEventListener('click', (event) => {
+            if (!searchInput.contains(event.target) && !searchResultsContainer.contains(event.target)) {
+                searchResultsContainer.style.display = 'none';
+            }
+        });
+    }
+});
+</script>
 {% block extra_scripts %}{% endblock %}
 </body>
 </html>

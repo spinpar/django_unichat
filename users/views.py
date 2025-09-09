@@ -1,12 +1,13 @@
 # users/views.py
-
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from datetime import date
+from datetime import date, datetime
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .forms import UserRegisterForm, ProfileUpdateForm, UserUpdateForm
 from .models import Profile
+from django.db.models import F
 
 def register(request):
     if request.method == 'POST':
@@ -23,26 +24,40 @@ def register(request):
     return render(request, 'users/register.html', {'form': form})
 
 @login_required
-def profile(request):
-    """View para exibir as informações do perfil do usuário logado."""
-    age = None
+def profile_view(request, username=None):
+    if username is None:
+        return redirect('user_profile', username=request.user.username)
+
+    target_user = get_object_or_404(User, username=username)
+
     try:
-        user_profile = request.user.profile
+        target_profile = target_user.profile
     except Profile.DoesNotExist:
-        user_profile = Profile.objects.create(user=request.user)
+        target_profile = Profile.objects.create(user=target_user)
     
-    if user_profile.date_of_birth:
+    is_following = False
+    if request.user.is_authenticated:
+        if request.user != target_user:
+            is_following = request.user.profile.following.filter(id=target_user.id).exists()
+    
+    followers_count = target_user.followers.count() 
+    following_count = target_profile.following.count() 
+    
+    age = None
+    if target_profile.date_of_birth:
         today = date.today()
-        birth_date = user_profile.date_of_birth
+        birth_date = target_profile.date_of_birth
         age = today.year - birth_date.year - ((today.month, today.day) < (birth_date.month, birth_date.day))
 
     context = {
-        'user': request.user,
-        'profile': user_profile,
+        'target_user': target_user,
+        'target_profile': target_profile,
+        'is_following': is_following,
         'age': age,
+        'followers_count': followers_count,
+        'following_count': following_count,
     }
     return render(request, 'users/profile.html', context)
-
 @login_required
 def profile_update(request):
     try:
@@ -54,30 +69,37 @@ def profile_update(request):
         u_form = UserUpdateForm(request.POST, instance=request.user)
         p_form = ProfileUpdateForm(request.POST, request.FILES, instance=user_profile)
 
+        if 'date_of_birth' in request.POST and request.POST['date_of_birth']:
+            try:
+                user_profile.date_of_birth = datetime.strptime(request.POST['date_of_birth'], '%Y-%m-%d').date()
+            except ValueError:
+                messages.error(request, 'Formato de data inválido. Por favor, use AAAA-MM-DD.')
+                return redirect('profile_update')
+        else:
+            pass 
+
         if u_form.is_valid() and p_form.is_valid():
             u_form.save()
             p_form.save()
+            user_profile.save()
             messages.success(request, 'Seu perfil foi atualizado com sucesso!')
             return redirect('profile')
         else:
-            print("Erros no formulário de usuário:", u_form.errors)
-            print("Erros no formulário de perfil:", p_form.errors)
+            messages.error(request, 'O formulário tem erros. Por favor, corrija-os.')
     else:
         u_form = UserUpdateForm(instance=request.user)
         p_form = ProfileUpdateForm(instance=user_profile)
 
     context = {
         'u_form': u_form,
-        'p_form': p_form
+        'p_form': p_form,
     }
     return render(request, 'users/profile_update.html', context)
 
 def user_profile(request, username):
     """View para exibir as informações de perfil de qualquer usuário."""
-    # Tenta obter o usuário pelo nome de usuário; se não encontrar, retorna 404
     user = get_object_or_404(User, username=username)
     
-    # Adicione a mesma lógica para verificar o perfil e calcular a idade
     age = None
     try:
         profile_data = user.profile
@@ -85,7 +107,7 @@ def user_profile(request, username):
             today = date.today()
             age = today.year - profile_data.date_of_birth.year - ((today.month, today.day) < (profile_data.date_of_birth.month, profile_data.date_of_birth.day))
     except Profile.DoesNotExist:
-        profile_data = None  # Define como None se o perfil não existir
+        profile_data = None
     
     context = {
         'user_data': user,
@@ -93,3 +115,53 @@ def user_profile(request, username):
         'age': age,
     }
     return render(request, 'users/user_profile.html', context)
+
+@login_required
+def follow_user(request, username):
+    target_user = get_object_or_404(User, username=username)
+    user_profile = request.user.profile
+
+    if user_profile.following.filter(id=target_user.id).exists():
+        user_profile.following.remove(target_user)
+    else:
+        user_profile.following.add(target_user)
+
+    return redirect('user_profile', username=username)
+
+@login_required
+def get_follow_list(request, username, list_type):
+    target_user = get_object_or_404(User, username=username)
+    
+    user_list = []
+    
+    if list_type == 'followers':
+        profiles = target_user.followers.select_related('user').all()
+        user_list = [
+            {
+                'username': p.user.username,
+                'first_name': p.user.first_name,
+                'last_name': p.user.last_name,
+                'avatar_url': p.avatar.url if p.avatar else '/static/img/default_profile.png'
+            } 
+            for p in profiles
+        ]
+    elif list_type == 'following':
+        following_users = target_user.profile.following.all()
+        user_list = [
+            {
+                'username': u.username,
+                'first_name': u.first_name,
+                'last_name': u.last_name,
+                'avatar_url': u.profile.avatar.url if hasattr(u, 'profile') and u.profile.avatar else '/static/img/default_profile.png'
+            }
+            for u in following_users
+        ]
+
+    return JsonResponse({'users': user_list})
+
+@login_required
+def home(request):
+    """
+    Renderiza a página inicial para usuários logados.
+    """
+    return render(request, 'home.html')

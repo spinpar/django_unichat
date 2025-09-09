@@ -1,5 +1,5 @@
 :root {
-    --primary-color: #04347c;
+    --primary-color: #003F7D;
     --secondary-color: #f9d121;
     --bg-color: #ffffff;
     --text-color: #333;
@@ -189,7 +189,6 @@ html, body {
 button {
     width: 100%;
     padding: 16px;
-    background-color:
     background-color: var(--primary-color);
     color: #fff;
     font-size: 1.15em;

@@ -15,6 +15,12 @@ class Profile(models.Model):
     location = models.CharField(max_length=100, blank=True)
     website = models.URLField(max_length=200, blank=True)
     course = models.ForeignKey(Course, on_delete=models.SET_NULL, null=True, blank=True)
+    following = models.ManyToManyField(
+        User,
+        related_name='followers',
+        symmetrical=False,
+        blank=True
+    )
 
 def __str__(self):
     return f'{self.user.username} Profile'

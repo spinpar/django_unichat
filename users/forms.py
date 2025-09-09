@@ -75,6 +75,21 @@ class UserRegisterForm(UserCreationForm):
     
 
 ## Profile Update Form
+class ProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['bio', 'location', 'website', 'avatar', 'course'] 
+        labels = {
+            'bio': 'Bio',
+            'location': 'Localização',
+            'website': 'Site',
+            'course': 'Curso',
+            'avatar': 'Foto de Perfil'
+
+        }
+        widgets = {
+            'bio': forms.Textarea(attrs={'rows': 4}),
+        }
 
 class UserUpdateForm(forms.ModelForm):
     class Meta:
@@ -83,20 +98,4 @@ class UserUpdateForm(forms.ModelForm):
         labels = {
             'first_name': 'Nome',
             'last_name': 'Sobrenome',
-        }
-
-class ProfileUpdateForm(forms.ModelForm):
-    location = forms.CharField(max_length=100, required=False)
-    website = forms.URLField(required=False)
-    date_of_birth = forms.DateField(
-        label="Data de Nascimento",
-        widget=forms.DateInput(attrs={'type': 'date'}),
-        required=True
-    )
-    
-    class Meta:
-        model = Profile
-        fields = ['date_of_birth', 'bio', 'avatar', 'location', 'website', 'course']
-        widgets = {
-            'bio': forms.Textarea(attrs={'rows': 4})
         }
