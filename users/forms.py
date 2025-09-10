@@ -3,6 +3,9 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import Profile, Course
 from datetime import date
+from django.forms import ModelMultipleChoiceField
+from django.forms.widgets import CheckboxSelectMultiple
+
 
 ## User Registration Form
 class UserRegisterForm(UserCreationForm):
@@ -69,27 +72,44 @@ class UserRegisterForm(UserCreationForm):
                 user=user,
                 avatar=avatar,
                 date_of_birth=date_of_birth,
-                course=course
             )
+            courses = self.cleaned_data.get('course', None)
+            if course:
+                profile.course.add(course)
+                
         return user
     
 
 ## Profile Update Form
 class ProfileUpdateForm(forms.ModelForm):
+    course = forms.ModelMultipleChoiceField(
+        queryset=Course.objects.all(),
+        widget=CheckboxSelectMultiple,
+        required=False,
+        label="Cursos"
+    )
+
+    def __init__(self, *args, **kwargs):
+        # Remove o argumento 'is_teacher' antes de chamar o método pai
+        is_teacher = kwargs.pop('is_teacher', False)
+        super().__init__(*args, **kwargs)
+
+        # Se o usuário NÃO for um professor, remove o campo 'is_teacher'
+        if not is_teacher:
+            del self.fields['is_teacher']
+
     class Meta:
         model = Profile
-        fields = ['bio', 'location', 'website', 'avatar', 'course'] 
+        fields = ['bio', 'location', 'website', 'avatar', 'course', 'is_teacher']
         labels = {
             'bio': 'Bio',
             'location': 'Localização',
             'website': 'Site',
-            'course': 'Curso',
-            'avatar': 'Foto de Perfil'
-
+            'avatar': 'Foto de Perfil',
+            'is_teacher': 'Sou um(a) professor(a)'
         }
         widgets = {
-            'bio': forms.Textarea(attrs={'rows': 4}),
-        }
+            'bio': forms.Textarea(attrs={'rows': 4}), }
 
 class UserUpdateForm(forms.ModelForm):
     class Meta:

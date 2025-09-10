@@ -10,79 +10,101 @@
 
 {% block content %}
 <div class="container mt-4">
-    <div class="card shadow-sm p-4">
-        <div class="d-flex justify-content-end mb-3">
-            {% if request.user == target_user %}
-                <a href="{% url 'profile_update' %}" class="btn btn-primary">
-                    <i class="fas fa-pencil-alt"></i> Editar perfil
-                </a>
-            {% else %}
-                <a href="{% url 'follow_user' username=target_user.username %}" class="btn btn-primary">
-                    {% if is_following %}
-                        Deixar de Seguir
-                    {% else %}
-                        Seguir
-                    {% endif %} 
-                </a>
-            {% endif %}
-        </div>
-        
-        <div class="d-flex align-items-center mb-4">
-            <div class="me-4">
-                {% if target_profile.avatar %} 
-                    <img src="{{ target_profile.avatar.url }}" alt="Profile Avatar" class="rounded-circle" style="width: 120px; height: 120px; object-fit: cover;">
-                {% else %}
-                    <img src="{% static 'img/default_profile.png' %}" alt="Default Profile" class="rounded-circle" style="width: 120px; height: 120px; object-fit: cover;">
-                {% endif %}
-            </div>
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
             
-            <div>
-                <h1 class="h4 fw-bold mb-0">{{ target_user.first_name }} {{ target_user.last_name }}</h1>
-                <p class="text-muted mb-1">@{{ target_user.username }}</p>
-
-                <div class="d-flex flex-column">
-                    {% if target_profile and target_profile.course %} 
-                        <p class="text-muted mb-0"><i class="fas fa-graduation-cap me-1"></i> {{ target_profile.course.name }}</p>
+            <div class="card shadow-sm p-4 mb-4">
+                <div class="d-flex justify-content-end mb-3">
+                    {% if request.user == target_user %}
+                        <a href="{% url 'profile_update' %}" class="btn btn-primary">
+                            <i class="fas fa-pencil-alt"></i> Editar perfil
+                        </a>
+                    {% else %}
+                        <a href="{% url 'follow_user' username=target_user.username %}" class="btn btn-primary">
+                            {% if is_following %}
+                                Deixar de Seguir
+                            {% else %}
+                                Seguir
+                            {% endif %} 
+                        </a>
                     {% endif %}
+                </div>
+                
+                <div class="d-flex align-items-center mb-4">
+                    <div class="me-4">
+                        {% if target_profile.avatar %} 
+                            <img src="{{ target_profile.avatar.url }}" alt="Profile Avatar" class="rounded-circle" style="width: 120px; height: 120px; object-fit: cover;">
+                        {% else %}
+                            <img src="{% static 'img/default_profile.png' %}" alt="Default Profile" class="rounded-circle" style="width: 120px; height: 120px; object-fit: cover;">
+                        {% endif %}
+                    </div>
                     
-                    <div class="d-flex mt-2">
-                        <a href="#" class="me-4 text-decoration-none text-dark" data-bs-toggle="modal" data-bs-target="#followModal" data-list-type="followers">
-                            <span class="fw-bold">{{ followers_count }}</span>
-                            <span class="text-muted">seguidores</span>
-                        </a>
-                        <a href="#" class="text-decoration-none text-dark" data-bs-toggle="modal" data-bs-target="#followModal" data-list-type="following">
-                            <span class="fw-bold">{{ following_count }}</span>
-                            <span class="text-muted">seguindo</span>
-                        </a>
+                    <div>
+                        <h1 class="h4 fw-bold mb-0">{{ target_user.first_name }} {{ target_user.last_name }}</h1>
+                        <p class="text-muted mb-1">@{{ target_user.username }}</p>
+
+                        <div class="d-flex flex-column">
+                            {% if target_profile and target_profile.course.exists %}
+                                <p class="text-muted mb-0"><i class="fas fa-graduation-cap me-1"></i>
+                                    {% if target_profile.is_teacher %}
+                                        <span class="fw-bold">Prof.</span>
+                                    {% endif %}
+
+                                    {% for course in target_profile.course.all %}
+                                        {{ course.name }}{% if not forloop.last %}, {% endif %}
+                                    {% endfor %}
+                                </p>
+                            {% endif %}
+                            
+                            <div class="d-flex mt-2">
+                                <a href="#" class="me-4 text-decoration-none text-dark" data-bs-toggle="modal" data-bs-target="#followModal" data-list-type="followers">
+                                    <span class="fw-bold">{{ followers_count }}</span>
+                                    <span class="text-muted">seguidores</span>
+                                </a>
+                                <a href="#" class="text-decoration-none text-dark" data-bs-toggle="modal" data-bs-target="#followModal" data-list-type="following">
+                                    <span class="fw-bold">{{ following_count }}</span>
+                                    <span class="text-muted">seguindo</span>
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
+                <p class="lead mb-4">{{ target_profile.bio|default:"Nenhuma bio adicionada ainda." }}</p>
+
+                <ul class="list-unstyled d-flex flex-wrap text-muted">
+                    {% if target_profile and target_profile.location %} 
+                    <li class="me-3 mb-2">
+                        <i class="fas fa-map-marker-alt me-1"></i> {{ target_profile.location }}
+                    </li>
+                    {% endif %}
+                    
+                    {% if target_profile and target_profile.website %} 
+                    <li class="me-3 mb-2">
+                        <i class="fas fa-link me-1"></i> <a href="{{ target_profile.website }}" class="text-decoration-none">{{ target_profile.website }}</a>
+                    </li>
+                    {% endif %}
+
+                    {% if age is not None %}
+                    <li class="me-3 mb-2">
+                        <i class="fas fa-birthday-cake me-1"></i> {{ age }} anos
+                    </li>
+                    {% endif %}
+                    
+                    <li class="me-3 mb-2">
+                        <i class="far fa-calendar-alt me-1"></i> Ingressou em {{ target_user.date_joined|date:"F Y" }}
+                    </li>
+                </ul>
             </div>
-        </div>
-        <p class="lead mb-4">{{ target_profile.bio|default:"Nenhuma bio adicionada ainda." }}</p>
-
-        <ul class="list-unstyled d-flex flex-wrap text-muted">
-            {% if target_profile and target_profile.location %} 
-            <li class="me-3 mb-2">
-                <i class="fas fa-map-marker-alt me-1"></i> {{ target_profile.location }}
-            </li>
-            {% endif %}
-            
-            {% if target_profile and target_profile.website %} 
-            <li class="me-3 mb-2">
-                <i class="fas fa-link me-1"></i> <a href="{{ target_profile.website }}" class="text-decoration-none">{{ target_profile.website }}</a>
-            </li>
-            {% endif %}
-
-            {% if age is not None %}
-            <li class="me-3 mb-2">
-                <i class="fas fa-birthday-cake me-1"></i> {{ age }} anos
-            </li>
-            {% endif %}
-            
-            <li class="me-3 mb-2">
-                <i class="far fa-calendar-alt me-1"></i> Ingressou em {{ target_user.date_joined|date:"F Y" }}
-            </li>
-        </ul>
+            <div class="posts-section mt-4">
+                <h2 class="mb-3">Últimos Posts</h2>
+                {% for post in posts %}
+                    {% include "posts/post_card.html" %}
+                {% empty %}
+                    <p>Nenhum post ainda.</p>
+                {% endfor %}
+            </div>
+            </div>
     </div>
 </div>
 
@@ -94,76 +116,196 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <ul class="list-group" id="user-list-container">
-                    </ul>
+                <ul class="list-group" id="user-list-container"></ul>
             </div>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Lógica para o Modal de Seguidores/Seguindo
     const followModal = document.getElementById('followModal');
-    followModal.addEventListener('show.bs.modal', function(event) {
-        const button = event.relatedTarget;
-        const listType = button.getAttribute('data-list-type');
-        const username = "{{ target_user.username }}";
-        const modalTitle = followModal.querySelector('.modal-title');
-        const userListContainer = document.getElementById('user-list-container');
+    if (followModal) {
+        followModal.addEventListener('show.bs.modal', function(event) {
+            const button = event.relatedTarget;
+            const listType = button.getAttribute('data-list-type');
+            const username = "{{ target_user.username }}";
+            const modalTitle = followModal.querySelector('.modal-title');
+            const userListContainer = document.getElementById('user-list-container');
 
-        if (listType === 'followers') {
-            modalTitle.textContent = 'Seguidores';
-        } else {
-            modalTitle.textContent = 'Seguindo';
-        }
+            if (listType === 'followers') {
+                modalTitle.textContent = 'Seguidores';
+            } else {
+                modalTitle.textContent = 'Seguindo';
+            }
 
-        userListContainer.innerHTML = '';
+            userListContainer.innerHTML = '';
 
-        fetch(`/profile/${username}/${listType}/`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.users.length > 0) {
-                    data.users.forEach(user => {
-                        const listItem = document.createElement('li');
-                        listItem.className = 'list-group-item d-flex align-items-center'; // Classes para layout flexbox
-                        
-                        const avatar = document.createElement('img');
-                        avatar.src = user.avatar_url;
-                        avatar.className = 'rounded-circle me-3'; // Classes para estilizar o avatar
-                        avatar.style.width = '40px';
-                        avatar.style.height = '40px';
-                        avatar.style.objectFit = 'cover';
-                        
-                        const userInfoDiv = document.createElement('div');
-                        
-                        const nameLink = document.createElement('a');
-                        nameLink.href = `/profile/${user.username}/`; // Link para o perfil
-                        nameLink.textContent = `${user.first_name} ${user.last_name}`;
-                        nameLink.className = 'fw-bold text-decoration-none text-dark';
-                        
-                        const usernameSpan = document.createElement('span');
-                        usernameSpan.textContent = `@${user.username}`;
-                        usernameSpan.className = 'text-muted d-block';
-                        
-                        userInfoDiv.appendChild(nameLink);
-                        userInfoDiv.appendChild(usernameSpan);
-                        
-                        listItem.appendChild(avatar);
-                        listItem.appendChild(userInfoDiv);
-                        
-                        userListContainer.appendChild(listItem);
-                    });
-                } else {
-                    const emptyItem = document.createElement('li');
-                    emptyItem.className = 'list-group-item text-center';
-                    emptyItem.textContent = 'Nenhum usuário encontrado.';
-                    userListContainer.appendChild(emptyItem);
+            fetch(`/profile/${username}/${listType}/`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.users.length > 0) {
+                        data.users.forEach(user => {
+                            const listItem = document.createElement('li');
+                            listItem.className = 'list-group-item d-flex align-items-center'; 
+                            
+                            const avatar = document.createElement('img');
+                            avatar.src = user.avatar_url;
+                            avatar.className = 'rounded-circle me-3'; 
+                            avatar.style.width = '40px';
+                            avatar.style.height = '40px';
+                            avatar.style.objectFit = 'cover';
+                            
+                            const userInfoDiv = document.createElement('div');
+                            
+                            const nameLink = document.createElement('a');
+                            nameLink.href = `/profile/${user.username}/`; 
+                            nameLink.textContent = `${user.first_name} ${user.last_name}`;
+                            nameLink.className = 'fw-bold text-decoration-none text-dark';
+                            
+                            const usernameSpan = document.createElement('span');
+                            usernameSpan.textContent = `@${user.username}`;
+                            usernameSpan.className = 'text-muted d-block';
+                            
+                            userInfoDiv.appendChild(nameLink);
+                            userInfoDiv.appendChild(usernameSpan);
+                            
+                            listItem.appendChild(avatar);
+                            listItem.appendChild(userInfoDiv);
+                            
+                            userListContainer.appendChild(listItem);
+                        });
+                    } else {
+                        const emptyItem = document.createElement('li');
+                        emptyItem.className = 'list-group-item text-center';
+                        emptyItem.textContent = 'Nenhum usuário encontrado.';
+                        userListContainer.appendChild(emptyItem);
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao carregar a lista:', error);
+                    userListContainer.textContent = 'Erro ao carregar os dados.';
+                });
+        });
+    }
+
+    // Lógica de Votação (curtidas e descurtidas) para posts, comentários e replies
+    const voteButtons = document.querySelectorAll('.vote-button, .btn-like-post, .btn-dislike-post, .btn-like-comment, .btn-dislike-comment, .btn-like-reply, .btn-dislike-reply');
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+
+    voteButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault(); 
+            const url = this.getAttribute('href') || `/posts/post/${this.dataset.postId}/vote/${this.dataset.voteType}/`;
+            const isProfilePage = !!this.dataset.postId;
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken,
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({})
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
                 }
+                return response.json();
+            })
+            .then(data => {
+                let likesCountElement, dislikesCountElement;
+                if (isProfilePage) {
+                    const buttonContainer = this.closest('.d-flex.align-items-center');
+                    likesCountElement = buttonContainer.querySelector('.likes-count');
+                    dislikesCountElement = buttonContainer.querySelector('.dislikes-count');
+                } else {
+                    const voteContainer = this.closest('.post-vote-container, .comment-vote-container, .reply-vote-container');
+                    likesCountElement = voteContainer.querySelector('.fa-thumbs-up + span');
+                    dislikesCountElement = voteContainer.querySelector('.fa-thumbs-down + span');
+                }
+                if (likesCountElement) likesCountElement.textContent = data.likes_count;
+                if (dislikesCountElement) dislikesCountElement.textContent = data.dislikes_count;
             })
             .catch(error => {
-                console.error('Erro ao carregar a lista:', error);
-                userListContainer.textContent = 'Erro ao carregar os dados.';
+                console.error('Erro na votação:', error);
             });
+        });
     });
+
+    // Lógica de pré-visualização da imagem (se o elemento existir na página)
+    const fileInput = document.getElementById('id_image');
+    const previewContainer = document.getElementById('image-preview-container');
+    const previewImage = document.getElementById('image-preview');
+
+    if (fileInput && previewContainer && previewImage) {
+        fileInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImage.src = e.target.result;
+                    previewContainer.style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            } else {
+                previewContainer.style.display = 'none';
+                previewImage.src = '#';
+            }
+        });
+    }
+
+    // Lógica para o seletor de emojis 😃
+    const emojiButtons = document.querySelectorAll('.emoji-button');
+
+    emojiButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const parentContainer = this.closest('.position-relative');
+            const emojiDropdown = parentContainer.querySelector('.emoji-picker-dropdown');
+
+            if (emojiDropdown) {
+                document.querySelectorAll('.emoji-picker-dropdown').forEach(dropdown => {
+                    if (dropdown !== emojiDropdown) {
+                        dropdown.style.display = 'none';
+                    }
+                });
+                emojiDropdown.style.display = emojiDropdown.style.display === 'block' ? 'none' : 'block';
+            }
+        });
+    });
+
+    // Lógica para inserir o emoji na caixa de texto
+    const emojiItems = document.querySelectorAll('.emoji');
+    emojiItems.forEach(emojiItem => {
+        emojiItem.addEventListener('click', function() {
+            const form = this.closest('form');
+            const textarea = form.querySelector('textarea[name="content"]');
+            if (textarea) {
+                const emoji = this.getAttribute('data-emoji');
+                const start = textarea.selectionStart;
+                const end = textarea.selectionEnd;
+                textarea.value = textarea.value.substring(0, start) + emoji + textarea.value.substring(end);
+                textarea.focus();
+                textarea.selectionStart = textarea.selectionEnd = start + emoji.length;
+                this.closest('.emoji-picker-dropdown').style.display = 'none';
+            }
+        });
+    });
+
+    // Lógica para fechar o dropdown de emoji ao clicar fora dele
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.emoji-picker-dropdown') && !e.target.closest('.emoji-button')) {
+            document.querySelectorAll('.emoji-picker-dropdown').forEach(dropdown => {
+                dropdown.style.display = 'none';
+            });
+        }
+    });
+
 });
 </script>
 {% endblock %}

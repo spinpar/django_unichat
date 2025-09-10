@@ -1,16 +1,52 @@
-{% if query %}
-    <h2>Resultados para "{{ query }}"</h2>
-    {% if results %}
-        <ul>
-        {% for user in results %}
-            <li>
-                <a href="{% url 'user_profile' user.username %}">{{ user.username }} ({{ user.get_full_name }})</a>
-            </li>
-        {% endfor %}
-        </ul>
-    {% else %}
-        <p>Nenhum usuário encontrado.</p>
-    {% endif %}
-{% else %}
-    <p>Digite um nome de usuário ou nome para buscar.</p>
-{% endif %}
+{% extends "base.html" %}
+{% block content %}
+    <div class="container mt-4">
+        <h3>Resultados da Pesquisa para "{{ query }}"</h3>
+        
+        <hr>
+        
+        <h4 class="mt-4">Usuários</h4>
+        <div class="row">
+            {% for user in user_results %}
+                <div class="col-md-4 mb-3">
+                    <div class="card p-3">
+                        <a href="{% url 'user_profile' username=user.username %}" class="text-decoration-none text-dark d-flex align-items-center">
+                            <img src="{% if user.profile.avatar %}{{ user.profile.avatar.url }}{% else %}/static/img/default_profile.png{% endif %}" class="rounded-circle me-3" width="50" height="50" alt="Avatar">
+                            <div>
+                                <h5 class="mb-0">{{ user.first_name }} {{ user.last_name }}</h5>
+                                <small class="text-muted">@{{ user.username }}</small>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            {% empty %}
+                <p>Nenhum usuário encontrado.</p>
+            {% endfor %}
+        </div>
+        
+        <hr>
+        
+        <h4 class="mt-4">Posts</h4>
+        <div class="posts-container">
+            {% for post in post_results %}
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="{% if post.author.profile.avatar %}{{ post.author.profile.avatar.url }}{% else %}/static/img/default_profile.png{% endif %}" class="rounded-circle me-3" width="50" height="50" alt="Avatar">
+                            <div>
+                                <a href="{% url 'user_profile' username=post.author.username %}" class="text-decoration-none text-dark">
+                                    <h5 class="mb-0">{{ post.author.first_name }} {{ post.author.last_name }}</h5>
+                                </a>
+                                <p class="text-muted mb-0">@{{ post.author.username }}</p>
+                                <small class="text-muted">{{ post.created_at|date:"d M Y, H:i" }}</small>
+                            </div>
+                        </div>
+                        <p>{{ post.content }}</p>
+                    </div>
+                </div>
+            {% empty %}
+                <p>Nenhum post encontrado.</p>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

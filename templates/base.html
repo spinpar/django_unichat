@@ -8,7 +8,7 @@
 {% load static %}
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="{% static 'css/base.css' %}">
+<link rel="stylesheet" href="{% static 'staticfiles\admin\css\base.css' %}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 {% block extra_head %}{% endblock %}
@@ -41,7 +41,7 @@
                     <a href="#" class="nav-link position-relative"><i class="fas fa-comment-dots fa-lg"></i></a>
                 </li>
                 <li class="nav-item d-flex align-items-center gap-2">
-                    <a class="nav-link d-flex align-items-center gap-2" href="{% url 'profile' %}">
+                    <a class="nav-link d-flex align-items-center gap-2" href="{% url 'profile' username=user.username %}">
                         <img src="{% if user.profile.avatar %}{{ user.profile.avatar.url }}{% else %}{% static 'img/default_profile.png' %}{% endif %}" alt="Foto de Perfil" width="40" height="40" class="rounded-circle">
                         <span>{{ user.username }}</span>
                     </a>
@@ -72,99 +72,140 @@
         <p class="mb-0">&copy; 2025 UniChat. Todos os direitos reservados.</p>
     </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-<script src="{% static 'js/main.js' %}"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const searchInput = document.getElementById('search-input');
-    const searchResultsContainer = document.getElementById('search-results-container');
-    const searchButton = document.getElementById('search-button');
-    let searchTimeout;
-
-    if (searchInput && searchResultsContainer) {
-        function fetchUsers(query) {
-            if (query.length < 2) {
-                searchResultsContainer.style.display = 'none';
-                return;
-            }
-
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(() => {
-                fetch(`{% url 'user_search' %}?q=${query}`, {
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    searchResultsContainer.innerHTML = '';
-                    if (data.users.length > 0) {
-                        data.users.forEach(user => {
-                            const resultItem = document.createElement('a');
-                            resultItem.href = `/profile/${user.username}/`;
-                            resultItem.className = 'list-group-item list-group-item-action d-flex align-items-center';
-
-                            const avatar = document.createElement('img');
-                            avatar.src = user.avatar_url;
-                            avatar.className = 'rounded-circle me-3';
-                            avatar.style.width = '40px';
-                            avatar.style.height = '40px';
-                            avatar.style.objectFit = 'cover';
-
-                            const userInfo = document.createElement('div');
-                            userInfo.innerHTML = `
-                                <h6 class="mb-0">${user.first_name} ${user.last_name}</h6>
-                                <small class="text-muted">@${user.username}</small>
-                            `;
-
-                            resultItem.appendChild(avatar);
-                            resultItem.appendChild(userInfo);
-                            searchResultsContainer.appendChild(resultItem);
-                        });
-
-                        // Adiciona o link "Ver mais resultados"
-                        const moreResultsLink = document.createElement('a');
-                        moreResultsLink.href = `{% url 'user_search' %}?q=${query}`;
-                        moreResultsLink.className = 'list-group-item list-group-item-action text-center text-primary fw-bold';
-                        moreResultsLink.textContent = 'Ver mais resultados...';
-                        searchResultsContainer.appendChild(moreResultsLink);
-                        
-                        searchResultsContainer.style.display = 'block';
-                    } else {
-                        // Se não houver resultados
-                        const noResults = document.createElement('div');
-                        noResults.className = 'list-group-item text-center text-muted';
-                        noResults.textContent = 'Nenhum resultado encontrado.';
-                        searchResultsContainer.appendChild(noResults);
-                        searchResultsContainer.style.display = 'block';
-                    }
-                })
-                .catch(error => {
-                    console.error('Erro na busca:', error);
-                    searchResultsContainer.style.display = 'none';
-                });
-            }, 300);
-        }
-
-        searchInput.addEventListener('input', (event) => {
-            fetchUsers(event.target.value);
-        });
-
-        if (searchButton) {
-            searchButton.addEventListener('click', (event) => {
-                event.preventDefault();
-                window.location.href = `{% url 'user_search' %}?q=${searchInput.value}`;
-            });
-        }
-
-        document.addEventListener('click', (event) => {
-            if (!searchInput.contains(event.target) && !searchResultsContainer.contains(event.target)) {
-                searchResultsContainer.style.display = 'none';
-            }
-        });
-    }
-});
-</script>
-{% block extra_scripts %}{% endblock %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Seu código JavaScript de busca vai AQUI, fora de um bloco
+        const searchInput = document.getElementById('search-input');
+        const searchResultsContainer = document.getElementById('search-results-container');
+        const searchButton = document.getElementById('search-button');
+        let searchTimeout;
+    
+        if (searchInput && searchResultsContainer) {
+            function fetchResults(query) {
+                if (query.length < 2) {
+                    searchResultsContainer.style.display = 'none';
+                    return;
+                }
+    
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    fetch(`{% url 'user_search' %}?q=${query}`, {
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        searchResultsContainer.innerHTML = '';
+                        
+                        let totalResults = 0;
+                        
+                        if (data.users && data.users.length > 0) {
+                            totalResults += data.users.length;
+                            const usersHeading = document.createElement('h6');
+                            usersHeading.className = 'dropdown-header';
+                            usersHeading.textContent = 'Usuários';
+                            searchResultsContainer.appendChild(usersHeading);
+    
+                            data.users.forEach(user => {
+                                const resultItem = document.createElement('a');
+                                resultItem.href = `/profile/${user.username}/`;
+                                resultItem.className = 'list-group-item list-group-item-action d-flex align-items-center';
+    
+                                const avatar = document.createElement('img');
+                                avatar.src = user.avatar_url;
+                                avatar.className = 'rounded-circle me-3';
+                                avatar.style.width = '40px';
+                                avatar.style.height = '40px';
+                                avatar.style.objectFit = 'cover';
+    
+                                const userInfo = document.createElement('div');
+                                userInfo.innerHTML = `
+                                    <h6 class="mb-0">${user.first_name} ${user.last_name}</h6>
+                                    <small class="text-muted">@${user.username}</small>
+                                `;
+    
+                                resultItem.appendChild(avatar);
+                                resultItem.appendChild(userInfo);
+                                searchResultsContainer.appendChild(resultItem);
+                            });
+                        }
+    
+                        if (data.posts && data.posts.length > 0) {
+                            totalResults += data.posts.length;
+                            const postsHeading = document.createElement('h6');
+                            postsHeading.className = 'dropdown-header mt-2';
+                            postsHeading.textContent = 'Posts';
+                            searchResultsContainer.appendChild(postsHeading);
+    
+                            data.posts.forEach(post => {
+                                const resultItem = document.createElement('a');
+                                resultItem.href = `/posts/${post.id}/`; 
+                                resultItem.className = 'list-group-item list-group-item-action d-flex align-items-center';
+    
+                                const avatar = document.createElement('img');
+                                avatar.src = post.author_avatar;
+                                avatar.className = 'rounded-circle me-3';
+                                avatar.style.width = '40px';
+                                avatar.style.height = '40px';
+                                avatar.style.objectFit = 'cover';
+    
+                                const postInfo = document.createElement('div');
+                                postInfo.innerHTML = `
+                                    <h6 class="mb-0">@${post.author_username}</h6>
+                                    <small class="text-muted">${post.content}</small>
+                                `;
+    
+                                resultItem.appendChild(avatar);
+                                resultItem.appendChild(postInfo);
+                                searchResultsContainer.appendChild(resultItem);
+                            });
+                        }
+    
+                        if (totalResults > 0) {
+                            const moreResultsLink = document.createElement('a');
+                            moreResultsLink.href = `{% url 'user_search' %}?q=${query}`;
+                            moreResultsLink.className = 'list-group-item list-group-item-action text-center text-primary fw-bold';
+                            moreResultsLink.textContent = 'Ver mais resultados...';
+                            searchResultsContainer.appendChild(moreResultsLink);
+                            searchResultsContainer.style.display = 'block';
+                        } else {
+                            const noResults = document.createElement('div');
+                            noResults.className = 'list-group-item text-center text-muted';
+                            noResults.textContent = 'Nenhum resultado encontrado.';
+                            searchResultsContainer.appendChild(noResults);
+                            searchResultsContainer.style.display = 'block';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erro na busca:', error);
+                        searchResultsContainer.style.display = 'none';
+                    });
+                }, 300);
+            }
+    
+            searchInput.addEventListener('input', (event) => {
+                fetchResults(event.target.value);
+            });
+    
+            if (searchButton) {
+                searchButton.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    window.location.href = `{% url 'user_search' %}?q=${searchInput.value}`;
+                });
+            }
+    
+            document.addEventListener('click', (event) => {
+                if (!searchInput.contains(event.target) && !searchResultsContainer.contains(event.target)) {
+                    searchResultsContainer.style.display = 'none';
+                }
+            });
+        }
+    });
+    </script>
+    
+    {% block extra_js %}{% endblock %}
 </body>
 </html>

@@ -14,13 +14,10 @@ class Profile(models.Model):
     date_of_birth = models.DateField(null=True, blank=True)
     location = models.CharField(max_length=100, blank=True)
     website = models.URLField(max_length=200, blank=True)
-    course = models.ForeignKey(Course, on_delete=models.SET_NULL, null=True, blank=True)
-    following = models.ManyToManyField(
-        User,
-        related_name='followers',
-        symmetrical=False,
-        blank=True
-    )
+    course = models.ManyToManyField(Course, related_name='students', blank=True)
+    following = models.ManyToManyField(User, related_name='followers', symmetrical=False,
+blank=True)
+    is_teacher = models.BooleanField(default=False) 
 
 def __str__(self):
     return f'{self.user.username} Profile'

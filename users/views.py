@@ -25,7 +25,6 @@ def register(request):
         form = UserRegisterForm()
     return render(request, 'users/register.html', {'form': form})
 
-@login_required
 def profile_view(request, username=None):
     if username is None:
         return redirect('user_profile', username=request.user.username)
@@ -51,6 +50,16 @@ def profile_view(request, username=None):
         birth_date = target_profile.date_of_birth
         age = today.year - birth_date.year - ((today.month, today.day) < (birth_date.month, birth_date.day))
 
+    # AQUI está a correção: remova a linha .annotate(...)
+    posts = Post.objects.filter(
+        author=target_user
+    ).select_related(
+        'author__profile'
+    ).prefetch_related(
+        'comments__author__profile',
+        'comments__replies__author__profile'
+    ).order_by('-created_at')
+
     context = {
         'target_user': target_user,
         'target_profile': target_profile,
@@ -58,14 +67,19 @@ def profile_view(request, username=None):
         'age': age,
         'followers_count': followers_count,
         'following_count': following_count,
+        'posts': posts,
     }
+    
     return render(request, 'users/profile.html', context)
+
 @login_required
 def profile_update(request):
     try:
         user_profile = request.user.profile
     except Profile.DoesNotExist:
         user_profile = Profile.objects.create(user=request.user)
+
+    is_teacher_user = user_profile.is_teacher
 
     if request.method == 'POST':
         u_form = UserUpdateForm(request.POST, instance=request.user)
@@ -90,7 +104,7 @@ def profile_update(request):
             messages.error(request, 'O formulário tem erros. Por favor, corrija-os.')
     else:
         u_form = UserUpdateForm(instance=request.user)
-        p_form = ProfileUpdateForm(instance=user_profile)
+        p_form = ProfileUpdateForm(instance=user_profile, is_teacher=is_teacher_user)
 
     context = {
         'u_form': u_form,
@@ -161,7 +175,6 @@ def get_follow_list(request, username, list_type):
 
     return JsonResponse({'users': user_list})
 
-
 @login_required
 def home(request):
     if request.method == 'POST':
@@ -174,16 +187,45 @@ def home(request):
     else:
         form = PostForm()
 
-    posts = Post.objects.select_related('author__profile').prefetch_related(
+    user_course_id = None
+    if request.user.profile.course.exists():
+        user_course_id = request.user.profile.course.first().id
+
+    teacher_posts = Post.objects.filter(
+        Q(author__profile__is_teacher=True) &
+        (
+            Q(author__profile__course__id=user_course_id) |
+            Q(author__profile__course__isnull=True)
+        )
+    ).distinct().select_related(
+        'author__profile'
+    ).prefetch_related(
         'comments__author__profile',
         'comments__replies__author__profile'
-    ).annotate(
-        likes_count=Count('votes', filter=Q(votes__vote_type='like')),
-        dislikes_count=Count('votes', filter=Q(votes__vote_type='dislike'))
+    ).order_by('-created_at') 
+
+    following_ids = request.user.profile.following.values_list('id', flat=True)
+
+    query_filter = Q(author__id__in=following_ids)
+
+    if user_course_id:
+        query_filter |= Q(author__profile__course__id=user_course_id)
+
+    student_posts = Post.objects.filter(
+        query_filter
+    ).filter(
+        ~Q(author__profile__is_teacher=True)
+    ).distinct().select_related(
+        'author__profile'
+    ).prefetch_related(
+        'comments__author__profile',
+        'comments__replies__author__profile'
     ).order_by('-created_at')
 
+    all_posts = list(teacher_posts) + list(student_posts)
+
     context = {
-        'posts': posts,
+        'posts': all_posts,
         'form': form
     }
     return render(request, 'home.html', context)

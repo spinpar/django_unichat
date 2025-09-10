@@ -1,0 +1,78 @@
+{% load static %}
+
+<div class="d-flex mb-3">
+    <img src="{% if comment.author.profile.avatar %}{{ comment.author.profile.avatar.url }}{% else %}{% static 'img/default_profile.png' %}{% endif %}" class="rounded-circle me-2" width="30" height="30" alt="Avatar Comentário">
+    <div>
+        <a href="{% url 'profile' username=comment.author.username %}" class="text-decoration-none text-dark">
+            <small class="fw-bold">{{ comment.author.username }}</small>
+        </a>
+        <p class="mb-0">{{ comment.content }}</p>
+
+        <div class="d-flex align-items-center mt-1 comment-vote-container">
+            <a href="{% url 'posts:vote_comment' comment.id 'like' %}" class="btn btn-link p-0 text-decoration-none text-muted me-2 btn-like-comment">
+                <i class="fas fa-thumbs-up"></i>
+                <span class="likes-count">{{ comment.likes_count }}</span>
+            </a>
+            <a href="{% url 'posts:vote_comment' comment.id 'dislike' %}" class="btn btn-link p-0 text-decoration-none text-muted btn-dislike-comment">
+                <i class="fas fa-thumbs-down"></i>
+                <span class="dislikes-count">{{ comment.dislikes_count }}</span>
+            </a>
+        </div>
+        
+        <div class="ms-5">
+            {% for reply in comment.replies.all %}
+                {% include "posts/reply_card.html" with reply=reply %}
+            {% endfor %}
+
+            <form action="{% url 'posts:add_reply_to_comment' comment.id %}" method="post" enctype="multipart/form-data" class="mt-2">
+                {% csrf_token %}
+                <div class="d-flex align-items-start">
+                    {% if request.user.profile.avatar %}
+                        <img src="{{ request.user.profile.avatar.url }}" class="rounded-circle me-3" width="30" height="30" alt="Avatar">
+                    {% else %}
+                        <img src="{% static 'img/default_profile.png' %}" class="rounded-circle me-3" width="30" height="30" alt="Default Avatar">
+                    {% endif %}
+                    <div class="flex-grow-1">
+                        <div class="mb-3">
+                            <textarea class="form-control" name="content" rows="2" placeholder="Escreva uma resposta..."></textarea>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center position-relative">
+                                <label for="id_image_reply_{{ comment.id }}" class="btn btn-link p-0 me-2 text-decoration-none text-muted">
+                                    <i class="fas fa-image fa-lg"></i>
+                                </label>
+                                <input type="file" name="image" id="id_image_reply_{{ comment.id }}" accept="image/*" style="display: none;">
+                                
+                                <button type="button" class="btn btn-link p-0 text-decoration-none text-muted emoji-button">
+                                    <i class="fas fa-smile fa-lg"></i>
+                                </button>
+                                
+                                <div class="emoji-picker-dropdown" style="display: none;">
+                                    <div class="emoji-grid">
+                                        <span class="emoji" data-emoji="😀">😀</span>
+                                        <span class="emoji" data-emoji="😂">😂</span>
+                                        <span class="emoji" data-emoji="😍">😍</span>
+                                        <span class="emoji" data-emoji="👍">👍</span>
+                                        <span class="emoji" data-emoji="❤️">❤️</span>
+                                        <span class="emoji" data-emoji="🎉">🎉</span>
+                                        <span class="emoji" data-emoji="🤔">🤔</span>
+                                        <span class="emoji" data-emoji="🔥">🔥</span>
+                                        <span class="emoji" data-emoji="💯">💯</span>
+                                        <span class="emoji" data-emoji="👏">👏</span>
+                                        <span class="emoji" data-emoji="😂">😂</span>
+                                        <span class="emoji" data-emoji="🤣">🤣</span>
+                                        <span class="emoji" data-emoji="😎">😎</span>
+                                        <span class="emoji" data-emoji="🥰">🥰</span>
+                                        <span class="emoji" data-emoji="😜">😜</span>
+                                        <span class="emoji" data-emoji="🤩">🤩</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-sm btn-outline-secondary">Responder</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

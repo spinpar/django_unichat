@@ -1,0 +1,26 @@
+{% load static %}
+
+<div class="d-flex mt-2 ms-4">
+    <img src="{% if reply.author.profile.avatar %}{{ reply.author.profile.avatar.url }}{% else %}{% static 'img/default_profile.png' %}{% endif %}" class="rounded-circle me-2" width="25" height="25" alt="Avatar Resposta">
+    <div>
+        <a href="{% url 'profile' username=reply.author.username %}" class="text-decoration-none text-dark">
+            <small class="fw-bold">{{ reply.author.username }}</small>
+        </a>
+        <p class="mb-0 small">{{ reply.content }}</p>
+
+        {% if reply.image %}
+            <img src="{{ reply.image.url }}" class="img-fluid rounded reply-image" alt="Imagem da Resposta">
+        {% endif %}
+
+        <div class="d-flex align-items-center mt-1 reply-vote-container">
+            <a href="{% url 'posts:vote_reply' reply.id 'like' %}" class="btn btn-link p-0 text-decoration-none text-muted me-2 btn-like-reply">
+                <i class="fas fa-thumbs-up small"></i>
+                <span class="small likes-count">{{ reply.likes_count }}</span>
+            </a>
+            <a href="{% url 'posts:vote_reply' reply.id 'dislike' %}" class="btn btn-link p-0 text-decoration-none text-muted btn-dislike-reply">
+                <i class="fas fa-thumbs-down small"></i>
+                <span class="small dislikes-count">{{ reply.dislikes_count }}</span>
+            </a>
+        </div>
+    </div>
+</div>
