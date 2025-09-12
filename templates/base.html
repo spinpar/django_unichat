@@ -231,10 +231,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 const notifications = data.notifications;
                 notificationsMenu.innerHTML = ''; // Limpa o menu existente
                 
-                // Adiciona o botão de marcar como lidas no topo
+                // Adiciona o botão "Marcar todas como lidas" no topo do menu suspenso
                 const markAllReadItem = document.createElement('li');
                 markAllReadItem.innerHTML = `<a class="dropdown-item text-center text-primary" href="#" id="mark-all-read-btn">Marcar todas como lidas</a>`;
                 notificationsMenu.appendChild(markAllReadItem);
+
+                // Re-atribui o evento de clique após recriar o elemento
+                const newMarkAllReadBtn = document.getElementById('mark-all-read-btn');
+                newMarkAllReadBtn.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    markAllRead();
+                });
                 
                 if (notifications.length > 0) {
                     notificationsBadge.textContent = notifications.length;
@@ -243,7 +250,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     notifications.forEach(notif => {
                         const li = document.createElement('li');
                         li.innerHTML = `
-                            <a class="dropdown-item d-flex align-items-center" href="${notif.target_url}">
+                            <a class="dropdown-item d-flex align-items-center" href="${notif.target_url}" data-notif-id="${notif.id}">
                                 <img src="${notif.actor_avatar_url}" alt="Avatar" width="30" height="30" class="rounded-circle me-2">
                                 <div>
                                     <strong>@${notif.actor_username}</strong> ${notif.verb}.
@@ -263,26 +270,54 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch(error => console.error('Erro ao buscar notificações:', error));
     }
 
-    // Marca todas as notificações como lidas
-    if (markAllReadBtn) {
-        markAllReadBtn.addEventListener('click', (event) => {
-            event.preventDefault();
-            fetch('{% url "mark_all_read" %}')
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        // Após marcar como lidas, recarrega a lista para atualizar a visualização
-                        fetchAndDisplayNotifications();
-                    }
-                })
-                .catch(error => console.error('Erro ao marcar notificações como lidas:', error));
-        });
+    // Função para marcar todas as notificações como lidas
+    function markAllRead() {
+        fetch('{% url "mark_all_read" %}', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                fetchAndDisplayNotifications(); // Recarrega a lista para atualizar a visualização
+            }
+        })
+        .catch(error => console.error('Erro ao marcar notificações como lidas:', error));
     }
 
-    // Carrega as notificações quando o dropdown é clicado
-    notificationsDropdown.addEventListener('click', (event) => {
-        fetchAndDisplayNotifications();
+    // Ouve o clique em qualquer link de notificação
+    notificationsMenu.addEventListener('click', (event) => {
+        const notificationLink = event.target.closest('a.dropdown-item');
+        if (notificationLink && notificationLink.dataset.notifId) {
+            event.preventDefault(); // Evita que a página seja redirecionada imediatamente
+            const notifId = notificationLink.dataset.notifId;
+            const targetUrl = notificationLink.href;
+
+            // Faz a requisição para marcar a notificação como lida
+            fetch(`/notifications/mark-read/${notifId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    // Após marcar como lida, navega para a URL de destino
+                    window.location.href = targetUrl;
+                }
+            })
+            .catch(error => console.error('Erro ao marcar notificação individual:', error));
+        }
     });
+
+    // Carrega as notificações ao passar o mouse sobre o ícone do sino
+    notificationsDropdown.addEventListener('mouseenter', fetchAndDisplayNotifications);
+
+    // Carrega a contagem de notificações ao carregar a página
+    fetchAndDisplayNotifications();
 });
 
     </script>

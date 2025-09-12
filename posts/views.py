@@ -1,6 +1,6 @@
 # posts/views.py
 
-from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Post, Comment, Reply, Vote
 from .forms import CommentForm, ReplyForm
@@ -154,3 +154,11 @@ def vote_reply(request, reply_id, vote_type):
         'likes_count': likes_count,
         'dislikes_count': dislikes_count
     })
+
+def post_detail(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    
+    context = {
+        'post': post,
+    }
+    return render(request, 'posts/post_detail.html', context)
