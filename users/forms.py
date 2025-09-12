@@ -61,6 +61,7 @@ class UserRegisterForm(UserCreationForm):
         user.email = self.cleaned_data['email']
         user.first_name = self.cleaned_data['first_name']
         user.last_name = self.cleaned_data['last_name']
+        
         if commit:
             user.save()
 
@@ -68,12 +69,12 @@ class UserRegisterForm(UserCreationForm):
             date_of_birth = self.cleaned_data.get('date_of_birth', None)
             course = self.cleaned_data.get('course', None)
 
-            Profile.objects.create(
+            profile = Profile.objects.create(
                 user=user,
                 avatar=avatar,
                 date_of_birth=date_of_birth,
             )
-            courses = self.cleaned_data.get('course', None)
+            
             if course:
                 profile.course.add(course)
                 

@@ -10,6 +10,9 @@ from .models import Profile
 from django.db.models import F, Count, Q
 from posts.models import Post, Vote
 from posts.forms import PostForm
+from notifications.models import Notification
+from django.contrib.contenttypes.models import ContentType
+
 
 def register(request):
     if request.method == 'POST':
@@ -27,7 +30,7 @@ def register(request):
 
 def profile_view(request, username=None):
     if username is None:
-        return redirect('user_profile', username=request.user.username)
+        return redirect('profile', username=request.user.username)
 
     target_user = get_object_or_404(User, username=username)
 
@@ -50,7 +53,6 @@ def profile_view(request, username=None):
         birth_date = target_profile.date_of_birth
         age = today.year - birth_date.year - ((today.month, today.day) < (birth_date.month, birth_date.day))
 
-    # AQUI está a correção: remova a linha .annotate(...)
     posts = Post.objects.filter(
         author=target_user
     ).select_related(
@@ -99,7 +101,7 @@ def profile_update(request):
             p_form.save()
             user_profile.save()
             messages.success(request, 'Seu perfil foi atualizado com sucesso!')
-            return redirect('profile')
+            return redirect('profile', username=request.user.username )
         else:
             messages.error(request, 'O formulário tem erros. Por favor, corrija-os.')
     else:
@@ -142,7 +144,17 @@ def follow_user(request, username):
     else:
         user_profile.following.add(target_user)
 
-    return redirect('user_profile', username=username)
+        if request.user != target_user:
+            user_content_type = ContentType.objects.get_for_model(User)
+            Notification.objects.create(
+                recipient=target_user,
+                actor=request.user,
+                verb='começou a te seguir',
+                content_type=user_content_type,
+                object_id=target_user.id
+            )
+
+    return redirect('profile', username=username)
 
 @login_required
 def get_follow_list(request, username, list_type):

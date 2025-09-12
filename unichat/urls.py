@@ -27,6 +27,9 @@ urlpatterns = [
     
     # URL do painel de administração
     path('admin/', admin.site.urls),
+
+    # URL do painel de notificação
+    path('notifications/', include('notifications.urls')),
 ]
 
 if settings.DEBUG:

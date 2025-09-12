@@ -5,8 +5,10 @@ from django.contrib.auth.decorators import login_required
 from .models import Post, Comment, Reply, Vote
 from .forms import CommentForm, ReplyForm
 from django.http import JsonResponse, HttpResponseRedirect
+from notifications.models import Notification
+from django.contrib.contenttypes.models import ContentType
 
-# Views para adicionar comentários e respostas (não precisam de mudança)
+# Views para adicionar comentários e respostas
 @login_required
 def add_comment_to_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
@@ -17,7 +19,18 @@ def add_comment_to_post(request, post_id):
             comment.author = request.user
             comment.post = post
             comment.save()
-            return redirect('home')
+            
+            if request.user != post.author:
+                post_content_type = ContentType.objects.get_for_model(Post)
+                Notification.objects.create(
+                    recipient=post.author,
+                    actor=request.user,
+                    verb='comentou em seu post',
+                    content_type=post_content_type,
+                    object_id=post.id
+                )
+                return redirect('home')
+
     return redirect('home')
 
 @login_required
@@ -30,10 +43,19 @@ def add_reply_to_comment(request, comment_id):
             reply.author = request.user
             reply.comment = comment
             reply.save()
+
+            if request.user != comment.author:
+                comment_content_type = ContentType.objects.get_for_model(Comment)
+                Notification.objects.create(
+                    recipient=comment.author,
+                    actor=request.user,
+                    verb='respondeu ao seu comentário',
+                    content_type=comment_content_type,
+                    object_id=comment.id
+                )
             return redirect('home')
     return redirect('home')
 
-# Views de votação (agora consolidadas e corrigidas)
 @login_required
 def vote_post(request, post_id, vote_type):
     post = get_object_or_404(Post, id=post_id)
@@ -50,8 +72,26 @@ def vote_post(request, post_id, vote_type):
         else:
             existing_vote.vote_type = vote_type
             existing_vote.save()
+            if vote_type == 'like' and post.author != user:
+                post_content_type = ContentType.objects.get_for_model(Post)
+                Notification.objects.create(
+                    recipient=post.author,
+                    actor=user,
+                    verb='curtiu seu post',
+                    content_type=post_content_type,
+                    object_id=post.id
+                )
     else:
         Vote.objects.create(user=user, post=post, vote_type=vote_type)
+        if vote_type == 'like' and post.author != user:
+            post_content_type = ContentType.objects.get_for_model(Post)
+            Notification.objects.create(
+                recipient=post.author,
+                actor=user,
+                verb='curtiu seu post',
+                content_type=post_content_type,
+                object_id=post.id
+            )
 
     likes_count = post.likes_count
     dislikes_count = post.dislikes_count
@@ -69,7 +109,6 @@ def vote_comment(request, comment_id, vote_type):
     if vote_type not in ['like', 'dislike']:
         return JsonResponse({'error': 'Tipo de voto inválido'}, status=400)
 
-    # Corrigido para usar o modelo Vote e o campo comment
     existing_vote = Vote.objects.filter(user=user, comment=comment).first()
 
     if existing_vote:
@@ -79,10 +118,8 @@ def vote_comment(request, comment_id, vote_type):
             existing_vote.vote_type = vote_type
             existing_vote.save()
     else:
-        # Corrigido para criar um voto no modelo Vote
         Vote.objects.create(user=user, comment=comment, vote_type=vote_type)
 
-    # Use as propriedades de contagem do modelo Comment
     likes_count = comment.likes_count
     dislikes_count = comment.dislikes_count
 
@@ -99,7 +136,6 @@ def vote_reply(request, reply_id, vote_type):
     if vote_type not in ['like', 'dislike']:
         return JsonResponse({'error': 'Tipo de voto inválido'}, status=400)
 
-    # Corrigido para usar o modelo Vote e o campo reply
     existing_vote = Vote.objects.filter(user=user, reply=reply).first()
 
     if existing_vote:
@@ -109,10 +145,8 @@ def vote_reply(request, reply_id, vote_type):
             existing_vote.vote_type = vote_type
             existing_vote.save()
     else:
-        # Corrigido para criar um voto no modelo Vote
         Vote.objects.create(user=user, reply=reply, vote_type=vote_type)
         
-    # Use as propriedades de contagem do modelo Reply
     likes_count = reply.likes_count
     dislikes_count = reply.dislikes_count
 
