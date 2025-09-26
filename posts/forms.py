@@ -1,5 +1,5 @@
 from django import forms
-from .models import Post,Comment, Reply
+from .models import Post,Comment, Reply, Event
 
 class PostForm(forms.ModelForm):
     content = forms.CharField(
@@ -35,3 +35,12 @@ class ReplyForm(forms.ModelForm):
     class Meta:
         model = Reply
         fields = ['content']
+
+class EventForm(forms.ModelForm):
+    class Meta:
+        model = Event
+        fields = ['title', 'description', 'location', 'event_date', 'event_time']
+        widgets = {
+            'event_date': forms.DateInput(attrs={'type': 'date'}),
+            'event_time': forms.TimeInput(attrs={'type': 'time'}),
+        }

@@ -8,8 +8,8 @@ from django.contrib.auth.models import User
 from .forms import UserRegisterForm, ProfileUpdateForm, UserUpdateForm
 from .models import Profile
 from django.db.models import F, Count, Q
-from posts.models import Post, Vote
-from posts.forms import PostForm
+from posts.models import Post, Vote, Event
+from posts.forms import PostForm, EventForm
 from notifications.models import Notification
 from django.contrib.contenttypes.models import ContentType
 
@@ -190,18 +190,31 @@ def get_follow_list(request, username, list_type):
 @login_required
 def home(request):
     if request.method == 'POST':
-        form = PostForm(request.POST, request.FILES)
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.author = request.user
-            post.save()
-            return redirect('home')
-    else:
-        form = PostForm()
+        form_type = request.POST.get('form_type')
+
+
+        if form_type == 'post':
+            form = PostForm(request.POST, request.FILES)
+            if form.is_valid():
+                post = form.save(commit=False)
+                post.author = request.user
+                post.save()
+                return redirect('home')
+        elif form_type == 'event':
+            event_form = EventForm(request.POST)
+            if event_form.is_valid():
+                event = event_form.save(commit=False)
+                event.author = request.user
+                event.save()
+                return redirect('home')
+    form = PostForm()
+    event_form = EventForm()
+
 
     user_course_id = None
     if request.user.profile.course.exists():
         user_course_id = request.user.profile.course.first().id
+
 
     teacher_posts = Post.objects.filter(
         Q(author__profile__is_teacher=True) &
@@ -214,14 +227,18 @@ def home(request):
     ).prefetch_related(
         'comments__author__profile',
         'comments__replies__author__profile'
-    ).order_by('-created_at') 
+    ).order_by('-created_at')
+
 
     following_ids = request.user.profile.following.values_list('id', flat=True)
 
+
     query_filter = Q(author__id__in=following_ids)
+
 
     if user_course_id:
         query_filter |= Q(author__profile__course__id=user_course_id)
+
 
     student_posts = Post.objects.filter(
         query_filter
@@ -234,10 +251,17 @@ def home(request):
         'comments__replies__author__profile'
     ).order_by('-created_at')
 
+
     all_posts = list(teacher_posts) + list(student_posts)
+
+
+    events = Event.objects.filter(author__profile__is_teacher=True).order_by('event_date', 'event_time')
+
 
     context = {
         'posts': all_posts,
-        'form': form
+        'form': form,
+        'events': events,
+        'event_form': event_form,
     }
     return render(request, 'home.html', context)

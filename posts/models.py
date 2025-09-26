@@ -76,3 +76,15 @@ class Vote(models.Model):
         elif self.reply:
             return f'{self.user.username} voted {self.vote_type} on reply {self.reply.id}'
         return 'Voto inválido'
+    
+class Event(models.Model):
+        author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='events')
+        title = models.CharField(max_length=200)
+        description = models.TextField()
+        location = models.CharField(max_length=200)
+        event_date = models.DateField()
+        event_time = models.TimeField()
+        created_at = models.DateTimeField(auto_now_add=True)
+
+        def __str__(self):
+            return f'Evento: {self.title}'
