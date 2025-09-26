@@ -6,15 +6,12 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic import RedirectView
 
-# Importa as views dos apps
-from users import views as user_views
-
 urlpatterns = [
     # URLs de autenticação do Django, como login, logout, etc.
     path('accounts/', include('django.contrib.auth.urls')),
     
     # URL principal que aponta para a home page
-    path('', user_views.home, name='home'),
+    path('', include('core.urls')),
     
     # URLs do seu app 'users'
     path('users/', include('users.urls')),

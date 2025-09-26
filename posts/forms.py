@@ -39,8 +39,20 @@ class ReplyForm(forms.ModelForm):
 class EventForm(forms.ModelForm):
     class Meta:
         model = Event
-        fields = ['title', 'description', 'location', 'event_date', 'event_time']
+        fields = ['title', 'description', 'location', 'event_date', 'event_time', 'image']
+
+        labels = {
+            'title': 'Título do Evento',
+            'description': 'Descrição',
+            'location': 'Local do Evento',
+            'event_date': 'Data do Evento',
+            'event_time': 'Hora do Evento',
+        }
+
         widgets = {
-            'event_date': forms.DateInput(attrs={'type': 'date'}),
-            'event_time': forms.TimeInput(attrs={'type': 'time'}),
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Título do Evento'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Descreva o evento...'}),
+            'location': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Local do Evento'}),
+            'event_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'event_time': forms.TimeInput(attrs={'type': 'time', 'class': 'form-control'}),
         }

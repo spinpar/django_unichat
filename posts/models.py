@@ -81,6 +81,7 @@ class Event(models.Model):
         author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='events')
         title = models.CharField(max_length=200)
         description = models.TextField()
+        image = models.ImageField(upload_to='event_images/', blank=True, null=True) 
         location = models.CharField(max_length=200)
         event_date = models.DateField()
         event_time = models.TimeField()
