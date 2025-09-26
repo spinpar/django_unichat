@@ -18,8 +18,15 @@
         <p>{{ post.content }}</p>
 
         {% if post.image %}
-            <img src="{{ post.image.url }}" class="img-fluid rounded post-image" alt="Imagem do Post">
-        {% endif %}
+    <div style="height: 350px; overflow: hidden; margin-bottom: 1rem;">
+        <img 
+            src="{{ post.image.url }}" 
+            class="img-fluid rounded post-image" 
+            alt="Imagem do Post"
+            style="width: 100%; height: 100%; object-fit: cover;"
+        >
+    </div>
+{% endif %}
 
         <hr>
         
