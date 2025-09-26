@@ -11,13 +11,13 @@ from users import views as user_views
 
 urlpatterns = [
     # URLs de autenticação do Django, como login, logout, etc.
-    path('', include('django.contrib.auth.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
     
     # URL principal que aponta para a home page
     path('', user_views.home, name='home'),
     
     # URLs do seu app 'users'
-    path('', include('users.urls')),
+    path('users/', include('users.urls')),
 
     # URLs do seu app 'searchcontent'
     path('search/', include('searchcontent.urls')),
