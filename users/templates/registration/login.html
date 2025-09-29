@@ -26,6 +26,7 @@
         <div class="form-group">
             <label for="id_password">Palavra-passe</label>
             <input type="password" name="password" id="id_password" placeholder="Senha" required>
+            <span id="toggle-password">👁</span>
         </div>
 
         <div class="form-actions">
@@ -41,6 +42,26 @@
 
     <p class="signup-link">Não tem uma conta? <a href="{% url 'register' %}">Cadastre-se gratuitamente</a></p>
 </div>
+
+<script>
+const passwordInput = document.getElementById('id_password');
+const togglePassword = document.getElementById('toggle-password');
+
+togglePassword.addEventListener('click', () => {
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        togglePassword.textContent = '🙈';
+    } else {
+        passwordInput.type = 'password';
+        togglePassword.textContent = '👁';
+    }
+});
+
+// Pop-up de erro caso login falhe
+{% if error %}
+alert('Senha incorreta, tente novamente');
+{% endif %}
+</script>
 
 </body>
 </html>

@@ -12,6 +12,7 @@ from posts.models import Post, Vote, Event
 from posts.forms import PostForm, EventForm
 from notifications.models import Notification
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth import authenticate, login
 
 
 def register(request):
@@ -265,3 +266,17 @@ def home(request):
         'event_form': event_form,
     }
     return render(request, 'home.html', context)
+
+def login_view(request):
+    error = False  # Flag para controlar erro de login
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)  # Loga o usuário
+            return redirect('home')  # Redireciona para home
+        else:
+            error = True  # Usuário ou senha incorretos
+
+    return render(request, 'users/login.html', {'error': error})

@@ -186,3 +186,27 @@ body.dark-theme .login-form button {
 body.dark-theme .login-form button:hover {
     background: #3a9bbf; /* Cor do botão ao passar o mouse no tema escuro */
 }
+
+.password-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+#id_password {
+    padding-right: 40px; /* espaço para o olho */
+}
+
+#toggle-password {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    cursor: pointer;
+    position: absolute;
+    right: 5px;
+    background-color: white;
+}
