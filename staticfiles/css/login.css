@@ -19,7 +19,7 @@ body {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
-/* Coluna da Esquerda (Imagem) */
+
 .left-side-container {
     position: relative;
     background-color: #f0f0f0;
@@ -42,7 +42,7 @@ body {
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
 }
 
-/* Coluna da Direita (Formulário) */
+
 .right-side-container {
     background-color: #fff;
     display: flex;
@@ -68,7 +68,7 @@ body {
     margin-bottom: 20px;
 }
 
-/* Estilos para o formulário e inputs do Django */
+
 .login p {
     margin-bottom: 15px;
     text-align: left;
@@ -84,10 +84,9 @@ body {
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
-    box-sizing: border-box; /* Garante que o padding não aumente a largura */
+    box-sizing: border-box; 
 }
 
-/* Estilos para o botão e links */
 .btn-login {
     width: 100%;
     padding: 12px;
@@ -104,7 +103,7 @@ body {
     font-size: 0.9em;
 }
 
-/* Responsividade */
+
 @media (max-width: 768px) {
     .login-page-container {
         grid-template-columns: 1fr;
