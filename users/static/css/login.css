@@ -12,12 +12,11 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #ffffff; /* Cor de fundo base */
-    background-image: radial-gradient(circle, rgba(0, 0, 0, 0.1) 10%, transparent 10%), radial-gradient(circle, rgba(0, 0, 0, 0.1) 10%, transparent 10%);
-    background-size: 10px 10px; /* Tamanho do padrão ajustado para pontos menores */
-    background-position: 0 0, 5px 5px; /* Posição dos pontos ajustada */
+    background-color: #ffffff;
+    background-image: radial-gradient(circle, rgba(0,0,0,0.1) 10%, transparent 10%), radial-gradient(circle, rgba(0,0,0,0.1) 10%, transparent 10%);
+    background-size: 10px 10px;
+    background-position: 0 0, 5px 5px;
 }
-
 
 /* Container do formulário */
 .login-form-container {
@@ -51,6 +50,7 @@ body {
 /* Formulário */
 .login-form .form-group {
     margin-bottom: 20px;
+    position: relative; /* Para posicionar ícones */
     text-align: left;
 }
 
@@ -61,10 +61,11 @@ body {
     color: #333;
 }
 
+/* Inputs com ícone */
 .login-form input[type="text"],
 .login-form input[type="password"] {
     width: 100%;
-    padding: 10px 12px;
+    padding: 10px 12px 10px 36px; /* Espaço à esquerda para o ícone */
     border-radius: 8px;
     border: 1px solid #ccc;
     font-size: 0.95rem;
@@ -76,117 +77,29 @@ body {
     outline: none;
 }
 
-/* Lembrar e link */
-.form-actions {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    font-size: 0.85rem;
+/* Ícones nos inputs */
+.form-group.user-icon::before,
+.form-group.password-icon::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    background-size: contain;
+    background-repeat: no-repeat;
 }
 
-.form-actions div {
-    display: flex;
-    align-items: center; /* Alinha verticalmente o checkbox e o texto */
+.form-group.user-icon::before {
+    background-image: url('../img/user-icon.svg'); /* Substitua pelo seu ícone de usuário */
 }
 
-.form-actions input[type="checkbox"] {
-    margin-right: 5px; /* Espaço entre o checkbox e o texto */
+.form-group.password-icon::before {
+    background-image: url('../img/lock-icon.svg'); /* Substitua pelo seu ícone de cadeado */
 }
 
-.form-actions a {
-    color: #04347c;
-    text-decoration: none;
-}
-
-.form-actions a:hover {
-    text-decoration: underline;
-}
-
-/* Botão */
-.login-form button {
-    width: 100%;
-    padding: 12px;
-    border: none;
-    border-radius: 8px;
-    background: #04347c;
-    color: #fff;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background 0.3s;
-}
-
-/* Botão */
-.login-form button {
-    width: 100%;
-    padding: 12px;
-    border: none;
-    border-radius: 8px;
-    background: #04347c;
-    color: #fff;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background 0.3s, transform 0.2s; /* Adiciona transição para a cor e transformação */
-}
-
-.login-form button:hover {
-    background: #032b5c;
-    transform: scale(1.05); /* Aumenta o botão levemente ao passar o mouse */
-}
-
-/* Link de cadastro */
-.signup-link {
-    font-size: 0.85rem;
-    margin-top: 15px;
-}
-
-.signup-link a {
-    color: #4dbdec;
-    text-decoration: none;
-}
-
-.signup-link a:hover {
-    text-decoration: underline;
-}
-
-/* Tema escuro */
-body.dark-theme {
-    background-color: #1a1a1a; /* Cor de fundo escura */
-    background-image: radial-gradient(circle, rgba(255, 255, 255, 0.1) 10%, transparent 10%), radial-gradient(circle, rgba(255, 255, 255, 0.1) 10%, transparent 10%);
-    color: #e0e0e0; /* Cor do texto clara */
-}
-
-/* Container do formulário no tema escuro */
-body.dark-theme .login-form-container {
-    background: rgba(50, 50, 50, 0.9); /* Fundo do formulário escuro e opaco */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Sombra mais suave */
-}
-
-/* Cores do texto no tema escuro */
-body.dark-theme .login-header h1,
-body.dark-theme .login-header p,
-body.dark-theme .login-form label,
-body.dark-theme .signup-link {
-    color: #e0e0e0; /* Cor do texto clara */
-}
-
-body.dark-theme .form-actions a {
-    color: #4dbdec; /* Cor do link no tema escuro */
-}
-
-body.dark-theme .form-actions a:hover {
-    text-decoration: underline; /* Efeito hover para links */
-}
-
-/* Estilos do botão no tema escuro */
-body.dark-theme .login-form button {
-    background: #4dbdec; /* Cor do botão no tema escuro */
-}
-
-body.dark-theme .login-form button:hover {
-    background: #3a9bbf; /* Cor do botão ao passar o mouse no tema escuro */
-}
-
+/* Toggle password */
 .password-wrapper {
     position: relative;
     display: inline-flex;
@@ -209,4 +122,105 @@ body.dark-theme .login-form button:hover {
     position: absolute;
     right: 5px;
     background-color: white;
+}
+
+/* Lembrar e link */
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    font-size: 0.85rem;
+}
+
+.form-actions div {
+    display: flex;
+    align-items: center;
+}
+
+.form-actions input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+.form-actions a {
+    color: #04347c;
+    text-decoration: none;
+}
+
+.form-actions a:hover {
+    text-decoration: underline;
+}
+
+/* Botão */
+.login-form button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: #04347c;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.login-form button:hover {
+    background: #032b5c;
+    transform: scale(1.05);
+}
+
+/* Link de cadastro */
+.signup-link {
+    font-size: 0.85rem;
+    margin-top: 15px;
+}
+
+.signup-link a {
+    color: #4dbdec;
+    text-decoration: none;
+}
+
+.signup-link a:hover {
+    text-decoration: underline;
+}
+
+/* Tema escuro */
+body.dark-theme {
+    background-color: #1a1a1a;
+    background-image: radial-gradient(circle, rgba(255,255,255,0.1) 10%, transparent 10%), radial-gradient(circle, rgba(255,255,255,0.1) 10%, transparent 10%);
+    color: #e0e0e0;
+}
+
+body.dark-theme .login-form-container {
+    background: rgba(50,50,50,0.9);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+body.dark-theme .login-header h1,
+body.dark-theme .login-header p,
+body.dark-theme .login-form label,
+body.dark-theme .signup-link {
+    color: #e0e0e0;
+}
+
+body.dark-theme .form-actions a {
+    color: #4dbdec;
+}
+
+body.dark-theme .login-form button {
+    background: #4dbdec;
+}
+
+body.dark-theme .login-form button:hover {
+    background: #3a9bbf;
+}
+
+/* Alerta de erro */
+.alert {
+    background-color: #f8d7da;
+    color: #842029;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
 }
