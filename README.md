@@ -1,33 +1,59 @@
+Perfeito! Aqui está o conteúdo do README em **Markdown**. Ele pode ser salvo como `README.md` ou usado como base para gerar um PDF.
+
+````markdown
 <div align="center">
   <h1>UniChat</h1>
+  <p><strong>🚧 Projeto em construção 🚧</strong></p>
 </div>
-
-<h4 align="center"> 
-  🚧 Projeto em construção 🚧
-</h4>
 
 ## Introdução
 
-Conectar estudantes e seus respectivos cursos em um único local, facilitando a comunicação e a interação entre eles.
+O **UniChat** é uma plataforma destinada a conectar estudantes e colaboradores de uma universidade em um único espaço. O objetivo é facilitar a comunicação, interação e divulgação de informações relevantes para cada curso ou setor.
 
-## 🛠 Funcionalidades do projeto
+## 🛠 Funcionalidades
 
-- **Funcionalidade 1**: Disponibilizar um chat geral da universidade.  
-- **Funcionalidade 2**: Cadastrar usuários.  
-- **Funcionalidade 3**: Permitir que alunos e funcionários divulguem no chat e em seções específicas.  
-- **Funcionalidade 4**: Permitir que administradores publiquem eventos na universidade.
+- **Chat geral**: Converse com toda a comunidade universitária em um chat central.  
+- **Cadastro de usuários**: Crie e gerencie perfis de alunos e funcionários.  
+- **Divulgação de informações**: Permite que usuários publiquem mensagens tanto no chat geral quanto em seções específicas.  
+- **Eventos universitários**: Administradores podem criar e divulgar eventos diretamente na plataforma.
 
-## 🔑 Como se cadastrar na plataforma
+## 🔑 Cadastro na plataforma
 
-> Visite o site [UniChat](https://localhost:8000) e clique em "Registrar-se", preencha os campos solicitados e confirme seu cadastro pelo e-mail enviado (se aplicável).
+1. Acesse o site [UniChat](https://localhost:8000).  
+2. Clique em **Registrar-se**.  
+3. Preencha os campos solicitados.  
+4. Confirme seu cadastro através do e-mail enviado (se aplicável).
 
-## Installation
+## 💻 Instalação
 
-Clone o repositório usando seu terminal: [Guia oficial de clonagem do GitHub](https://docs.github.com/pt/repositories/creating-and-managing-repositories/cloning-a-repository) usando o comando `git clone https://github.com/MattSouzaDev/unichat.git`, entre na pasta do projeto com `cd unichat`, crie um ambiente virtual com `python -m venv venv` (se já possui um ambiente virtual, adicione-o ao `.gitignore`) e instale Django e Pillow com `pip install Django Pillow django-crispy-forms`. Para mais informações sobre como instalar o Django, consulte a [Documentação](https://docs.djangoproject.com/en/5.2/intro/install/).
+1. Clone o repositório:
 
-## Contribuidores
+```bash
+git clone https://github.com/MattSouzaDev/unichat.git
+cd unichat
+````
 
-Este projeto existe graças ao nosso time!
+2. Crie um ambiente virtual (se ainda não tiver):
 
-| [<img src="https://avatars.githubusercontent.com/MattSouzaDev" width="115"><br><sub>Matheus Souza</sub>](https://github.com/MattSouzaDev) | [<img src="https://avatars.githubusercontent.com/u/92831339" width="115"><br><sub>E. Gabriel</sub>](https://github.com/rookie807) | [<img src="https://media-bsb1-1.cdn.whatsapp.net/v/t61.24694-24/375953298_1050010123029812_1974562062122246908_n.jpg?ccb=11-4&oh=01_Q5Aa2QHdUBXOUsc7cVhy6Pazq4sEXcZ7_GOSarMGk5bKEIoVZA&oe=68C8F067&_nc_sid=5e03e0&_nc_cat=105" width="115"><br><sub>Elias Paixão</sub>](https://github.com) | [<img src="https://media-bsb1-1.cdn.whatsapp.net/v/t61.24694-24/420093373_1756696721482337_4584287265639175909_n.jpg?ccb=11-4&oh=01_Q5Aa2QGdZWZa3E0NKD3JmWeH6D6qcUoDXlNl6Ij-hzdrvVLJEQ&oe=68C8C1A0&_nc_sid=5e03e0&_nc_cat=103" width="115"><br><sub>José</sub>](https://github.com/MattSouzaDev) | [<img src="https://avatars.githubusercontent.com/zeyfu" width="115"><br><sub>Henrique Kempim</sub>](https://github.com) |
-| :---: | :---: | :---: | :---: | :---: |
+```bash
+python -m venv venv
+```
+
+> **Observação:** Adicione o ambiente virtual ao `.gitignore` se ele já existir.
+
+3. Instale as dependências:
+
+```bash
+pip install django pillow django-crispy-forms crispy-bootstrap5
+```
+
+Para mais informações sobre instalação do Django, consulte a [documentação oficial](https://docs.djangoproject.com/en/5.2/intro/install/).
+
+## 👥 Contribuidores
+
+Este projeto existe graças à dedicação da nossa equipe:
+
+| [<img src="https://avatars.githubusercontent.com/MattSouzaDev" width="115"><br><sub>Matheus Souza</sub>](https://github.com/MattSouzaDev) | [<img src="https://avatars.githubusercontent.com/u/92831339" width="115"><br><sub>E. Gabriel</sub>](https://github.com/rookie807) | [<img src="https://media-bsb1-1.cdn.whatsapp.net/v/t61.24694-24/375953298_1050010123029812_1974562062122246908_n.jpg" width="115"><br><sub>Elias Paixão</sub>](https://github.com) | [<img src="https://media-bsb1-1.cdn.whatsapp.net/v/t61.24694-24/420093373_1756696721482337_4584287265639175909_n.jpg" width="115"><br><sub>José</sub>](https://github.com/MattSouzaDev) | [<img src="https://avatars.githubusercontent.com/zeyfu" width="115"><br><sub>Henrique Kempim</sub>](https://github.com) |
+| :---------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------: |
+
+
