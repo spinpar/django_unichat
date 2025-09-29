@@ -1,5 +1,3 @@
-Perfeito! Aqui está o conteúdo do README em **Markdown**. Ele pode ser salvo como `README.md` ou usado como base para gerar um PDF.
-
 ````markdown
 <div align="center">
   <h1>UniChat</h1>
