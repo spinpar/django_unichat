@@ -59,20 +59,20 @@
     let time = new Date();
     let hours = time.getHours();
     let minutes = time.getMinutes();
-
     let now = `${hours}:${minutes}`;
 
 
+    let ngrok_url = ""
+
     const roomId = JSON.parse(document.getElementById('room-id').textContent);
 
-    // in ngrok have to change window.location.host for their url
-    const chatSocket = new WebSocket(
-        'wss://' + '63d9d19d5d4d.ngrok-free.app' + '/ws/chat/' + roomId + '/'
-    );
-
     // const chatSocket = new WebSocket(
-    //     'ws://' + window.location.host + '/ws/chat/' + roomId + '/'
+    //     'wss://' + `${ngrok_url} + '/ws/chat/` + roomId + '/'
     // );
+
+    const chatSocket = new WebSocket(
+        'ws://' + window.location.host + '/ws/chat/' + roomId + '/'
+    );
 
     chatSocket.onmessage = function (e) {
         const data = JSON.parse(e.data);

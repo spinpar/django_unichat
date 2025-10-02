@@ -13,12 +13,19 @@ SECRET_KEY = 'django-insecure-9df+igxnu!9f62$u09e$i4*x)b92x344bhq(b-8p=4ag4@@5+*
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+
+# URL = "63d9d19d5d4d.ngrok-free.app"
+# ALLOWED_HOSTS = ['localhost', '127.0.0.1', URL]
+
+# CSRF_TRUSTED_ORIGINS = [
+#     f"https://{URL}",
+# ]
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -65,7 +72,17 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'unichat.wsgi.application'
+# WSGI_APPLICATION = 'unichat.wsgi.application'
+ASGI_APPLICATION = "unichat.asgi.application"
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        }
+    }
+}
 
 
 # Database
