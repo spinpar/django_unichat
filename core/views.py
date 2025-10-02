@@ -1,18 +1,11 @@
-from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from datetime import date, datetime
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
-from django.contrib.auth.models import User
-from users.forms import UserRegisterForm, ProfileUpdateForm, UserUpdateForm
-from users.models import Profile
-from django.db.models import F, Count, Q
-from posts.models import Post, Vote, Event
+from django.db.models import Q
+from posts.models import Post,Event
 from posts.forms import PostForm, EventForm
-from notifications.models import Notification
-from django.contrib.contenttypes.models import ContentType
-
+from chat.models import Room
 
 @login_required
 def home(request):
@@ -71,8 +64,10 @@ def home(request):
 
     events = Event.objects.filter(author__profile__is_teacher=True).order_by('event_date', 'event_time')
 
+    rooms = Room.objects.all()
 
     context = {
+        'rooms': rooms,
         'posts': all_posts,
         'form': form,
         'events': events,

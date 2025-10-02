@@ -14,7 +14,7 @@ urlpatterns = [
     path('', include('core.urls')),
     
     # URLs do seu app 'users'
-    path('users/', include('users.urls')),
+    path('', include('users.urls')),
 
     # URLs do seu app 'searchcontent'
     path('search/', include('searchcontent.urls')),
@@ -27,6 +27,9 @@ urlpatterns = [
 
     # URL do painel de notificação
     path('notifications/', include('notifications.urls')),
+
+    # URL do chat
+    path('ws/chat/', include('chat.urls')),
 ]
 
 if settings.DEBUG:

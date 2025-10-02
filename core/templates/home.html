@@ -1,53 +1,85 @@
 {% extends "base.html" %}
+
 {% load static %}
-{% block extra_css %}
-    <link rel="stylesheet" href="{% static 'home.css' %}">
-{% endblock %}
-{% block title %}Feed{% endblock %}
+
+<!-- {% block extra_css %}
+<link rel="stylesheet" href="{% static 'home.css' %}">
+{% endblock %} -->
+
+{% block title %}UniChat{% endblock %}
+
 {% block content %}
-<div class="container mt-4">
+<div class="container-fluid">
     <div class="row">
 
-        <div class="col-lg-8">
-            
+        <!-- Left Sidebar -->
+        <div class="col-md-3 col-lg-3 sidebar-left p-0">
+            <h3><i class="fa-solid fa-comments"></i> Chat Rooms</h3>
+            <ul class="list-group">
+                {% for room in rooms %}
+                <div class="card mb-3">
+                    <h5 class="card-title">Criado por @{{room.host}}</h5>
+                    <div class="card-body">
+                        <a class="btn btn-primary" href="/ws/chat/{{room.id}}">{{room.name}}</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </ul>
+        </div>
+
+
+        <div class="col-md-6 col-lg-6 main-content">
+
             <div class="card shadow-sm mb-4">
                 <div class="card-body">
                     <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="pills-post-tab" data-bs-toggle="pill" data-bs-target="#pills-post" type="button" role="tab" aria-controls="pills-post" aria-selected="true">Postar</button>
+                            <button class="nav-link active" id="pills-post-tab" data-bs-toggle="pill"
+                                data-bs-target="#pills-post" type="button" role="tab" aria-controls="pills-post"
+                                aria-selected="true">Postar</button>
                         </li>
                         {% if request.user.profile.is_teacher %}
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="pills-event-tab" data-bs-toggle="pill" data-bs-target="#pills-event" type="button" role="tab" aria-controls="pills-event" aria-selected="false">Criar Evento</button>
+                            <button class="nav-link" id="pills-event-tab" data-bs-toggle="pill"
+                                data-bs-target="#pills-event" type="button" role="tab" aria-controls="pills-event"
+                                aria-selected="false">Criar Evento</button>
                         </li>
                         {% endif %}
                     </ul>
                     <div class="tab-content" id="pills-tabContent">
-                        
-                        <div class="tab-pane fade show active" id="pills-post" role="tabpanel" aria-labelledby="pills-post-tab">
+
+                        <div class="tab-pane fade show active" id="pills-post" role="tabpanel"
+                            aria-labelledby="pills-post-tab">
                             <form method="post" action="{% url 'home' %}" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 <input type="hidden" name="form_type" value="post">
                                 <div class="d-flex align-items-start">
                                     {% if request.user.profile.avatar %}
-                                        <img src="{{ request.user.profile.avatar.url }}" class="rounded-circle me-3" width="50" height="50" alt="Avatar">
+                                    <img src="{{ request.user.profile.avatar.url }}" class="rounded-circle me-3"
+                                        width="50" height="50" alt="Avatar">
                                     {% else %}
-                                        <img src="{% static 'img/default_profile.png' %}" class="rounded-circle me-3" width="50" height="50" alt="Default Avatar">
+                                    <img src="{% static 'img/default_profile.png' %}" class="rounded-circle me-3"
+                                        width="50" height="50" alt="Default Avatar">
                                     {% endif %}
                                     <div class="flex-grow-1">
                                         <div class="mb-3">
-                                            <textarea class="form-control" name="content" rows="3" placeholder="O que está acontecendo?"></textarea>
+                                            <textarea class="form-control" name="content" rows="3"
+                                                placeholder="O que está acontecendo?"></textarea>
                                         </div>
                                         <div id="image-preview-container" class="mb-3" style="display: none;">
-                                            <img id="image-preview" src="#" alt="Pré-visualização da imagem" class="img-fluid rounded post-image">
+                                            <img id="image-preview" src="#" alt="Pré-visualização da imagem"
+                                                class="img-fluid rounded post-image">
                                         </div>
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div class="d-flex align-items-center position-relative">
-                                                <label for="id_image" class="btn btn-link p-0 me-2 text-decoration-none text-muted">
+                                                <label for="id_image"
+                                                    class="btn btn-link p-0 me-2 text-decoration-none text-muted">
                                                     <i class="fas fa-image fa-lg"></i>
                                                 </label>
-                                                <input type="file" name="image" id="id_image" accept="image/*" style="display: none;">
-                                                <button type="button" class="btn btn-link p-0 text-decoration-none text-muted emoji-button">
+                                                <input type="file" name="image" id="id_image" accept="image/*"
+                                                    style="display: none;">
+                                                <button type="button"
+                                                    class="btn btn-link p-0 text-decoration-none text-muted emoji-button">
                                                     <i class="fas fa-smile fa-lg"></i>
                                                 </button>
                                                 <div class="emoji-picker-dropdown" style="display: none;">
@@ -77,28 +109,30 @@
                                 </div>
                             </form>
                         </div>
-                        
+
                         <div class="tab-pane fade" id="pills-event" role="tabpanel" aria-labelledby="pills-event-tab">
                             <form method="post" action="{% url 'home' %}" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 <input type="hidden" name="form_type" value="event">
-                                
+
                                 <div class="d-flex align-items-start">
                                     {% if request.user.profile.avatar %}
-                                        <img src="{{ request.user.profile.avatar.url }}" class="rounded-circle me-3" width="50" height="50" alt="Avatar">
+                                    <img src="{{ request.user.profile.avatar.url }}" class="rounded-circle me-3"
+                                        width="50" height="50" alt="Avatar">
                                     {% else %}
-                                        <img src="{% static 'img/default_profile.png' %}" class="rounded-circle me-3" width="50" height="50" alt="Default Avatar">
+                                    <img src="{% static 'img/default_profile.png' %}" class="rounded-circle me-3"
+                                        width="50" height="50" alt="Default Avatar">
                                     {% endif %}
-                                    
+
                                     <div class="flex-grow-1">
                                         <div class="mb-3">
                                             {{ event_form.title }}
                                         </div>
-                                        
+
                                         <div class="mb-3">
                                             {{ event_form.description }}
                                         </div>
-                                        
+
                                         <div class="mb-3">
                                             {{ event_form.location }}
                                         </div>
@@ -115,15 +149,19 @@
                                         </div>
 
                                         <div id="image-preview-event-container" class="mb-3" style="display: none;">
-                                            <img id="image-preview-event" src="#" alt="Pré-visualização da imagem do evento" class="img-fluid rounded post-image">
+                                            <img id="image-preview-event" src="#"
+                                                alt="Pré-visualização da imagem do evento"
+                                                class="img-fluid rounded post-image">
                                         </div>
-                                        
+
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div class="d-flex align-items-center position-relative">
-                                                <label for="id_image_event" class="btn btn-link p-0 me-2 text-decoration-none text-muted">
+                                                <label for="id_image_event"
+                                                    class="btn btn-link p-0 me-2 text-decoration-none text-muted">
                                                     <i class="fas fa-image fa-lg"></i>
                                                 </label>
-                                                <input type="file" name="image" id="id_image_event" accept="image/*" style="display: none;">
+                                                <input type="file" name="image" id="id_image_event" accept="image/*"
+                                                    style="display: none;">
                                             </div>
                                             <button type="submit" class="btn btn-primary">Criar Evento</button>
                                         </div>
@@ -139,109 +177,112 @@
             <div class="mt-4">
                 <h2 class="mb-3">Últimos Posts</h2>
                 {% for post in posts %}
-                    {% include "posts/post_card.html" %}
+                {% include "posts/post_card.html" %}
                 {% empty %}
-                    <p>Nenhum post ainda.</p>
+                <p>Nenhum post ainda.</p>
                 {% endfor %}
             </div>
-            </div>
-        <div class="col-lg-4 d-none d-lg-block">
+        </div>
+        <div class="col-lg-3">
             {% if events %}
             <div class="card shadow-sm mb-4">
-    <div class="card-header bg-white d-flex justify-content-between align-items-center">
-        <h6 class="mb-0 fw-bold">Próximos Eventos</h6>
-        <a href="#" class="text-decoration-none small">Ver mais</a>
-    </div>
-    
-    <ul class="list-group list-group-flush">
-        {% for event in events %}
-    <li class="list-group-item">
-        
-        <div class="d-flex justify-content-between align-items-start mb-2">
-            <h6 class="mb-0 fw-bold me-2" style="font-size: 0.9rem;">{{ event.title }}</h6>
-            
-            <span class="badge bg-light text-secondary border border-secondary fw-normal p-1" style="font-size: 0.7rem;">
-                {{ event.tag|default:"Geral" }}
-            </span>
-        </div>
-        
-        <div class="text-muted small mb-2">
-            <p class="mb-0">
-                <i class="far fa-calendar-alt me-1"></i> 
-                {% if event.event_date == today %}
-                    Hoje 
-                {% elif event.event_date == tomorrow %}
-                    Amanhã 
-                {% else %}
-                    {{ event.event_date|date:"d M" }}
-                {% endif %}
-                <i class="far fa-clock ms-2 me-1"></i> {{ event.event_time|time:"H:i" }}
-            </p>
-            
-            <p class="mb-0"><i class="fas fa-map-marker-alt me-1"></i> {{ event.location|default:"Local não informado" }}</p>
-        </div>
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0 fw-bold">Próximos Eventos</h6>
+                    <a href="#" class="text-decoration-none small">Ver mais</a>
+                </div>
 
-        {% if event.image %}
-        <div class="mt-2" style="height: 200px; overflow: hidden; border-radius: 4px;"> <img 
-                src="{{ event.image.url }}" 
-                class="img-fluid w-100 object-fit-cover" 
-                alt="{{ event.title }}"
-                style="height: 100%;"
-            >
-        </div>
-        {% endif %}
-        
-        {% if request.user.profile.is_teacher and request.user == event.author %}
-        <div class="d-flex justify-content-end gap-2 mt-3">
-            <a href= "{% url 'editar_evento' event.pk %}" class="btn btn-sm btn-outline-secondary p-1"> <i class="fas fa-edit fa-lg"></i> </a>
-            
-            <button type="button" class="btn btn-sm btn-outline-danger p-1" 
-            data-bs-toggle="modal" 
-            data-bs-target="#deleteModal_{{ event.pk }}">
-        <i class="fas fa-trash-alt fa-lg"></i> 
-    </button>
-</div>
-{% endif %}
+                <ul class="list-group list-group-flush">
+                    {% for event in events %}
+                    <li class="list-group-item">
 
-<div class="modal fade" id="deleteModal_{{ event.pk }}" tabindex="-1" aria-labelledby="deleteModalLabel_{{ event.pk }}" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel_{{ event.pk }}">Confirmação de Exclusão</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h6 class="mb-0 fw-bold me-2" style="font-size: 0.9rem;">{{ event.title }}</h6>
+
+                            <span class="badge bg-light text-secondary border border-secondary fw-normal p-1"
+                                style="font-size: 0.7rem;">
+                                {{ event.tag|default:"Geral" }}
+                            </span>
+                        </div>
+
+                        <div class="text-muted small mb-2">
+                            <p class="mb-0">
+                                <i class="far fa-calendar-alt me-1"></i>
+                                {% if event.event_date == today %}
+                                Hoje
+                                {% elif event.event_date == tomorrow %}
+                                Amanhã
+                                {% else %}
+                                {{ event.event_date|date:"d M" }}
+                                {% endif %}
+                                <i class="far fa-clock ms-2 me-1"></i> {{ event.event_time|time:"H:i" }}
+                            </p>
+
+                            <p class="mb-0"><i class="fas fa-map-marker-alt me-1"></i> {{ event.location|default:"Local
+                                não informado" }}</p>
+                        </div>
+
+                        {% if event.image %}
+                        <div class="mt-2" style="height: 200px; overflow: hidden; border-radius: 4px;"> <img
+                                src="{{ event.image.url }}" class="img-fluid w-100 object-fit-cover"
+                                alt="{{ event.title }}" style="height: 100%;">
+                        </div>
+                        {% endif %}
+
+                        {% if request.user.profile.is_teacher and request.user == event.author %}
+                        <div class="d-flex justify-content-end gap-2 mt-3">
+                            <a href="{% url 'editar_evento' event.pk %}" class="btn btn-sm btn-outline-secondary p-1">
+                                <i class="fas fa-edit fa-lg"></i> </a>
+
+                            <button type="button" class="btn btn-sm btn-outline-danger p-1" data-bs-toggle="modal"
+                                data-bs-target="#deleteModal_{{ event.pk }}">
+                                <i class="fas fa-trash-alt fa-lg"></i>
+                            </button>
+                        </div>
+                        {% endif %}
+
+                        <div class="modal fade" id="deleteModal_{{ event.pk }}" tabindex="-1"
+                            aria-labelledby="deleteModalLabel_{{ event.pk }}" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="deleteModalLabel_{{ event.pk }}">Confirmação de
+                                            Exclusão</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Tem certeza que deseja apagar o evento: <strong>{{ event.title }}</strong>?
+                                        Esta ação é irreversível.
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Cancelar</button>
+
+                                        <form action="{% url 'apagar_evento' event.pk %}" method="post">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-danger">Sim, Apagar</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
             </div>
-            <div class="modal-body">
-                Tem certeza que deseja apagar o evento: <strong>{{ event.title }}</strong>?
-                Esta ação é irreversível.
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                
-                <form action="{% url 'apagar_evento' event.pk %}" method="post">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-danger">Sim, Apagar</button>
-                </form>
-            </div>
+            {% endif %}
         </div>
     </div>
-</div>      
-    </li>
-    {% endfor %}
-</ul>
-</div>
-{% endif %}
-            </div>
-        </div>
 </div>
 {% endblock content %}
 
 {% block extra_js %}
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         // Lógica de votação (curtidas e descurtidas)
         const voteButtons = document.querySelectorAll('.btn-like-post, .btn-dislike-post, .btn-like-comment, .btn-dislike-comment, .btn-like-reply, .btn-dislike-reply');
         voteButtons.forEach(button => {
-            button.addEventListener('click', function(event) {
+            button.addEventListener('click', function (event) {
                 event.preventDefault();
                 const url = this.getAttribute('href');
                 let voteContainer = this.closest('.post-vote-container, .comment-vote-container, .reply-vote-container');
@@ -257,17 +298,17 @@
                         'X-Requested-With': 'XMLHttpRequest'
                     }
                 })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    likesCountElement.textContent = data.likes_count;
-                    dislikesCountElement.textContent = data.dislikes_count;
-                })
-                .catch(error => console.error('Erro:', error));
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        likesCountElement.textContent = data.likes_count;
+                        dislikesCountElement.textContent = data.dislikes_count;
+                    })
+                    .catch(error => console.error('Erro:', error));
             });
         });
         // Lógica de pré-visualização da imagem para o formulário de postagem
@@ -279,12 +320,12 @@
         const previewContainerEvent = document.getElementById('image-preview-event-container');
         const previewImageEvent = document.getElementById('image-preview-event');
 
-        if (fileInputEvent) { 
-            fileInputEvent.addEventListener('change', function(event) {
+        if (fileInputEvent) {
+            fileInputEvent.addEventListener('change', function (event) {
                 const file = event.target.files[0];
                 if (file) {
                     const reader = new FileReader();
-                    reader.onload = function(e) {
+                    reader.onload = function (e) {
                         previewImageEvent.src = e.target.result;
                         previewContainerEvent.style.display = 'block';
                     }
@@ -294,13 +335,13 @@
                     previewImageEvent.src = '#';
                 }
             });
-}
+        }
         if (fileInput) { // Adicione esta verificação para evitar erros
-            fileInput.addEventListener('change', function(event) {
+            fileInput.addEventListener('change', function (event) {
                 const file = event.target.files[0];
                 if (file) {
                     const reader = new FileReader();
-                    reader.onload = function(e) {
+                    reader.onload = function (e) {
                         previewImage.src = e.target.result;
                         previewContainer.style.display = 'block';
                     }
@@ -316,7 +357,7 @@
         // Lógica para o seletor de emojis 😃
         const emojiButtons = document.querySelectorAll('.emoji-button');
         emojiButtons.forEach(button => {
-            button.addEventListener('click', function(e) {
+            button.addEventListener('click', function (e) {
                 e.preventDefault();
                 const parentContainer = this.closest('.position-relative');
                 const emojiDropdown = parentContainer.querySelector('.emoji-picker-dropdown');
@@ -333,7 +374,7 @@
         // Lógica para inserir o emoji na caixa de texto
         const emojiItems = document.querySelectorAll('.emoji');
         emojiItems.forEach(emojiItem => {
-            emojiItem.addEventListener('click', function() {
+            emojiItem.addEventListener('click', function () {
                 const form = this.closest('form');
                 // IMPORTANTE: Se o formulário de Evento tiver um campo de texto, você deve garantir que ele seja selecionado corretamente
                 // Para o post, a textarea tem name="content". Para o evento, se for o caso, ajuste o seletor.
@@ -351,7 +392,7 @@
             });
         });
         // Lógica para fechar o dropdown de emoji ao clicar fora dele
-        document.addEventListener('click', function(e) {
+        document.addEventListener('click', function (e) {
             if (!e.target.closest('.emoji-picker-dropdown') && !e.target.closest('.emoji-button')) {
                 document.querySelectorAll('.emoji-picker-dropdown').forEach(dropdown => {
                     dropdown.style.display = 'none';

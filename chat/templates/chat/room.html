@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block title %}Feed{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+    <div class="body-chat">
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h2>Usuários Online</h2>
+            <!-- <div class="user-list">
+                {% for i in users %}
+                <div class="user">
+                    <img src="" alt="User">
+                    <span>None</span>
+                </div>
+                {% endfor %}
+            </div> -->
+        </div>
+
+
+
+        <div class="chat-container">
+            <h1>Chat Room</h1>
+            <div class="chat-header">
+                <h3>Sala criada por @{{host}}</h3>
+            </div>
+            <div class="chat-messages" id="chat-log">
+                <div class="message received">
+                    <strong>{{host}}</strong><br>
+                    Hello! How are you?
+                    <span class="meta">10:32</span>
+                </div>
+                <div class="message sent">
+                    <strong>You</strong><br>
+                    I'm good, thanks! And you?
+                    <span class="meta">10:33</span>
+                </div>
+            </div>
+            <div class="chat-input">
+                <input id="chat-message-input" type="text" placeholder="Type a message..." />
+                <button id="chat-message-submit" value="Send">&#9658;</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- <textarea id="chat-log" cols="100" rows="20"></textarea><br>
+    <input id="chat-message-input" type="text" size="100"><br>
+    <input id="chat-message-submit" type="button" value="Send"> -->
+{{ id|json_script:"room-id" }}
+
+
+<script>
+    let time = new Date();
+    let hours = time.getHours();
+    let minutes = time.getMinutes();
+
+    let now = `${hours}:${minutes}`;
+
+
+    const roomId = JSON.parse(document.getElementById('room-id').textContent);
+
+    // in ngrok have to change window.location.host for their url
+    const chatSocket = new WebSocket(
+        'wss://' + '63d9d19d5d4d.ngrok-free.app' + '/ws/chat/' + roomId + '/'
+    );
+
+    // const chatSocket = new WebSocket(
+    //     'ws://' + window.location.host + '/ws/chat/' + roomId + '/'
+    // );
+
+    chatSocket.onmessage = function (e) {
+        const data = JSON.parse(e.data);
+
+        t_ms = "received"
+        if(data.is_from_me == true) {
+            t_ms = "sent"
+        }
+        newChat = `<div class="message ${t_ms}">
+                        <strong>${data.username}</strong><br>
+                        ${data.message}
+                        <span class="meta">${now}</span>
+                    </div>`
+
+        // Insert into the chat container
+        document.querySelector("#chat-log").insertAdjacentHTML("beforeend", newChat);
+
+        // Auto scroll to bottom
+        document.querySelector("#chat-log").scrollTop = document.querySelector("#chat-log").scrollHeight;
+
+        // document.querySelector('#chat-log').value += (data.message + '\n');
+    };
+
+    chatSocket.onclose = function (e) {
+        console.error('Chat socket closed unexpectedly', e);
+    };
+
+    document.querySelector('#chat-message-input').focus();
+    document.querySelector('#chat-message-input').onkeyup = function (e) {
+        if (e.key === 'Enter') {  // enter, return
+            document.querySelector('#chat-message-submit').click();
+        }
+    };
+
+    document.querySelector('#chat-message-submit').onclick = function (e) {
+        const messageInputDom = document.querySelector('#chat-message-input');
+        const message = messageInputDom.value;
+        chatSocket.send(JSON.stringify({
+            'message': message
+        }));
+        messageInputDom.value = '';
+    };
+</script>
+
+{% endblock %}

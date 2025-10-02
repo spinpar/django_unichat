@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     "posts.apps.PostsConfig",
     'notifications.apps.NotificationsConfig',
     'core.apps.CoreConfig',
+    'chat.apps.ChatConfig',
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
