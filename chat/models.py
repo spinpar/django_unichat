@@ -1,9 +1,10 @@
 from django.db import models
-from django.contrib.auth.models import User
+from users.models import Profile
+# from django.contrib.auth.models import User
 
 # Create your models here.
 class Room(models.Model):
-    host = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    host = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=200)
     description = models.CharField(max_length=200)
     #course
@@ -12,7 +13,7 @@ class Room(models.Model):
         return self.name
     
 class Message(models.Model):
-    author = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    author = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
     content = models.TextField()
     created = models.DateTimeField(auto_now_add=True)

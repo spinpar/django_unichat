@@ -15,12 +15,10 @@ class Profile(models.Model):
     location = models.CharField(max_length=100, blank=True)
     website = models.URLField(max_length=200, blank=True)
     course = models.ManyToManyField(Course, related_name='students', blank=True)
-    following = models.ManyToManyField(User, related_name='followers', symmetrical=False,
-blank=True)
+    following = models.ManyToManyField(User, related_name='followers', symmetrical=False, blank=True)
     is_teacher = models.BooleanField(default=False) 
-
-def __str__(self):
-    return f'{self.user.username} Profile'
+    def __str__(self):
+         return (self.user.username)
 
 def get_age(self):
         if self.date_of_birth:

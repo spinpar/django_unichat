@@ -6,7 +6,6 @@ from django.db.models import Q
 from posts.models import Post, Vote, Event
 from posts.forms import PostForm, EventForm
 from chat.models import Room
-from django.urls import reverse
 
 @login_required
 def home(request):
@@ -44,6 +43,7 @@ def home(request):
     all_posts = list(teacher_posts) + list(student_posts)
     events = Event.objects.filter(author__profile__is_teacher=True).order_by('event_date', 'event_time')
     rooms = Room.objects.all()
+    host = Room.objects.filter()
 
     context = {
         'rooms': rooms,
@@ -51,15 +51,6 @@ def home(request):
         'events': events,
     }
     return render(request, 'home.html', context)
-
-
-
-# posts/views.py
-
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from posts.forms import PostForm, EventForm
 
 
 @login_required
