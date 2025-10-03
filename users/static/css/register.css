@@ -1,148 +1,94 @@
 :root {
-    --primary-color: #003F7D;
-    --secondary-color: #f9d121;
-    --bg-color: #ffffff;
-    --text-color: #333;
-    --text-muted: #666;
-    --shadow-light: rgba(0, 0, 0, 0.08);
-    --border-radius: 16px;
-    --transition-speed: 0.3s;
-    --font-base: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --cor-primaria: #0a4ebd;
+    --cor-primaria-hover: #083d9b;
+    --cor-secundaria: #4dbdec;
+    --cor-fundo: #f0f2f5;
+    --cor-fundo-form: #ffffff;
+    --cor-fundo-ponto: rgba(0, 0, 0, 0.08);
+    --cor-texto: #333;
+    --cor-texto-secundario: #666;
+    --cor-borda: #ccc;
+    --cor-sombra: rgba(0, 0, 0, 0.1);
+    --raio-borda: 8px;
+    --transicao-suave: all 0.3s ease;
+    --fonte-principal: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-
-html, body {
-    height: 100%;
-    font-family: var(--font-base);
-    background: #f5f6fa;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: var(--fonte-principal);
 }
 
-.login-container {
-    display: grid;
-    grid-template-columns: 2.5fr 1fr;
-    width: 100%; /* Mudei para 100% */
-    max-width: none; /* Removi a restrição de largura máxima */
-    min-width: 0; /* Removi a
-    min-width: 0; /* Removi a largura mínima */
-    height: auto; /* Permita que a altura se ajuste ao conteúdo */
-    margin: auto; /* Centraliza o container */
-    background-color: var(--bg-color);
-    border-radius: var(--border-radius);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-    overflow: hidden;
-}
-
-.login-left-side {
-    position: relative;
-    overflow: hidden;
-}
-
-.login-left-side img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.6s ease;
-}
-
-.login-left-side:hover img {
-    transform: scale(1.05);
-}
-
-.fixed-caption {
-    position: absolute;
-    bottom: 30px;
-    left: 30px;
-    max-width: 70%;
-    padding: 20px 30px;
-    background: linear-gradient(to right, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0));
-    border-radius: 12px;
-    color: var(--secondary-color);
-    z-index: 10;
-    backdrop-filter: blur(4px);
-}
-
-.fixed-caption h5 {
-    font-size: 2.5em;
-    font-weight: 700;
-    line-height: 1.2;
-    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.7);
-}
-
-.login-right-side {
+body {
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    justify-content: flex-start;
-    padding: 60px 40px;
-    background-color: var(--bg-color);
-    overflow-y: auto;
+    min-height: 100vh;
+    background-color: var(--cor-fundo);
+    padding: 20px;
+    transition: var(--transicao-suave);
 }
 
-.small-logo {
-    max-width: 120px;
+.register-form-container {
+    background: var(--cor-fundo-form);
+    padding: 40px 30px;
+    border-radius: var(--raio-borda);
+    box-shadow: 0 5px 20px var(--cor-sombra);
+    width: 100%;
+    max-width: 500px;
+    transition: var(--transicao-suave);
+}
+
+.register-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.register-header img.small-logo {
+    width: 80px;
     margin-bottom: 20px;
 }
 
-.login-header h1 {
-    font-size: 2.5em;
-    font-weight: 700;
-    color: var(--primary-color);
+.register-header h1 {
+    font-size: 1.8rem;
     margin-bottom: 10px;
+    color: var(--cor-primaria);
 }
 
-.login-header h2 {
-    font-size: 1em;
-    color: var(--text-muted);
-    margin-bottom: 25px;
+.register-header p {
+    font-size: 0.95rem;
+    color: var(--cor-texto-secundario);
+    margin-bottom: 20px;
 }
 
-.register-form {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+.register-form .form-group {
+    margin-bottom: 20px;
 }
 
-.form-group {
-    display: flex;
-    flex-direction: column;
-}
-
-.form-group label {
-    font-size: 1em;
-    font-weight: 600;
-    color: var(--text-color);
+.register-form label {
+    display: block;
+    font-size: 0.9rem;
     margin-bottom: 8px;
+    color: var(--cor-texto);
 }
 
-.form-group input,
-.form-group select {
-    padding: 14px;
-    border: 1px solid #ddd;
-    border-radius: 12px;
-    font-size: 1em;
-    transition: 0.3s;
-    box-shadow: 0 4px 8px var(--shadow-light);
+.register-form input,
+.register-form select {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: var(--raio-borda);
+    border: 1px solid var(--cor-borda);
+    font-size: 1rem;
+    transition: var(--transicao-suave);
 }
 
-.form-group input:focus,
-.form-group select:focus {
+.register-form input:focus,
+.register-form select:focus {
     outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 4px rgba(4, 52, 124, 0.15);
-}
-
-.custom-date input[type="date"] {
-    padding: 14px;
-    border-radius: 12px;
-    border: 1px solid #ddd;
-    box-shadow: 0 4px 8px var(--shadow-light);
-}
-
-.custom-date input[type="date"]:focus {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 4px rgba(4, 52, 124, 0.15);
+    border-color: var(--cor-primaria);
+    box-shadow: 0 0 0 3px rgba(10, 78, 189, 0.2);
 }
 
 .file-input-wrapper {
@@ -151,16 +97,16 @@ html, body {
     align-items: center;
     justify-content: center;
     width: 100%;
-    height: 50px;
-    border: 1px solid #ddd;
-    border-radius: 12px;
+    height: 45px;
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--raio-borda);
     cursor: pointer;
-    background: #f5f5f5;
-    transition: 0.3s;
+    background: var(--cor-fundo-form);
+    transition: var(--transicao-suave);
 }
 
 .file-input-wrapper:hover {
-    background: #eaeaea;
+    background: #f5f5f5;
 }
 
 .file-input-wrapper input[type="file"] {
@@ -173,94 +119,60 @@ html, body {
 }
 
 .upload-icon {
-    font-size: 1.5em;
-    color: var(--primary-color);
+    font-size: 1.2rem;
+    color: var(--cor-primaria);
     z-index: 1;
 }
 
 #preview {
     display: none;
-    max-width: 150px;
+    max-width: 120px;
     border-radius: 50%;
     margin-top: 10px;
-    box-shadow: 0 4px 12px var(--shadow-light);
+    box-shadow: 0 4px 12px var(--cor-sombra);
 }
 
-button {
+.register-form button {
     width: 100%;
-    padding: 16px;
-    background-color: var(--primary-color);
-    color: #fff;
-    font-size: 1.15em;
-    font-weight: 700;
+    padding: 12px;
     border: none;
-    border-radius: 12px;
+    border-radius: var(--raio-borda);
+    background: var(--cor-primaria);
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: bold;
     cursor: pointer;
-    transition: background-color var(--transition-speed), transform 0.2s;
+    transition: var(--transicao-suave);
 }
 
-button:hover {
-    background-color: #032b60;
+.register-form button:hover {
+    background: var(--cor-primaria-hover);
     transform: translateY(-2px);
-}
-
-.divider {
-    display: flex;
-    align-items: center;
-    text-align: center;
-    color: #888;
-    margin: 30px 0;
-}
-
-.divider::before,
-.divider::after {
-    content: '';
-    flex: 1;
-    border-bottom: 1px solid #ddd;
-}
-
-.divider:not(:empty)::before {
-    margin-right: 0.5em;
-}
-
-.divider:not(:empty)::after {
-    margin-left: 0.5em;
 }
 
 .signup-link {
     text-align: center;
-    font-size: 0.95em;
-    color: var(--text-muted);
+    font-size: 0.9rem;
+    color: var(--cor-texto-secundario);
     margin-top: 20px;
 }
 
 .signup-link a {
-    color: var(--primary-color);
+    color: var(--cor-secundaria);
     text-decoration: none;
-    font-weight: 600;
+    font-weight: bold;
 }
 
 .signup-link a:hover {
     text-decoration: underline;
 }
 
-/* Responsividade */
-@media (max-width: 1200px) {
-    .login-container {
-        grid-template-columns: 2fr 1fr; /* Mantenha duas colunas em telas menores */
-        min-width: 600px; /* Ajuste conforme necessário */
+@media (max-width: 480px) {
+    .register-form-container {
+        padding: 25px 20px;
     }
-}
 
-@media (max-width: 900px) {
-    .login-container {
-        grid-template-columns: 1fr; /* Mude para uma coluna em telas muito pequenas */
-        height: auto; /* Permita que a altura se ajuste ao conteúdo */
-    }
-    .login-left-side {
-        display: none; /* Oculte o lado esquerdo em telas pequenas */
-    }
-    .login-right-side {
-        padding: 40px 20px; /* Ajuste o padding */
+    .register-header h1 {
+        font-size: 1.6rem;
     }
 }

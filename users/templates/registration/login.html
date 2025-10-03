@@ -1,46 +1,47 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login - UniChat</title>
-{% load static %}
-<link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - UniChat</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body>
 <div class="login-form-container">
     <div class="login-header">
-        <img src="{% static 'img/logo.png' %}" alt="UniChat Logo" class="small-logo">
-        <h1>UniChat</h1>
+        <img src="/static/img/logo.png" alt="unichat_login" class="small-logo">
+        <h1>UNICHAT</h1>
         <p>Entre na sua conta</p>
     </div>
 
     <form method="post" class="login-form">
         {% csrf_token %}
-
         {% if error %}
-        <div class="alert alert-danger">{{ error }}</div>
+            <div class="alert alert-danger">{{ error }}</div>
         {% endif %}
 
         <div class="form-group">
             {{ form.username.label_tag }}
             {{ form.username }}
-            {% if form.username.errors %}
-                <div class="error">{{ form.username.errors }}</div>
-            {% endif %}
         </div>
 
         <div class="form-group">
             {{ form.password.label_tag }}
-            {{ form.password }}
-            <span id="toggle-password">👁</span>
+            <div class="password-wrapper">
+                {{ form.password }}
+                <button type="button" id="toggle-password">
+                    <i class="fa-solid fa-eye-slash"></i>
+                </button>
+            </div>
             {% if form.password.errors %}
                 <div class="error">{{ form.password.errors }}</div>
             {% endif %}
         </div>
 
         <div class="form-actions">
-            <div>
+            <div class="remember-me">
                 {{ form.remember_me }}
                 {{ form.remember_me.label_tag }}
             </div>
@@ -55,15 +56,19 @@
 
 <script>
 const passwordInput = document.getElementById('id_password');
-const togglePassword = document.getElementById('toggle-password');
+const togglePasswordButton = document.getElementById('toggle-password');
+const eyeIcon = togglePasswordButton.querySelector('i');
 
-togglePassword.addEventListener('click', () => {
-    if (passwordInput.type === 'password') {
+togglePasswordButton.addEventListener('click', () => {
+    const isPassword = passwordInput.type === 'password';
+    if (isPassword) {
         passwordInput.type = 'text';
-        togglePassword.textContent = '🙈';
+        eyeIcon.classList.remove('fa-eye-slash');
+        eyeIcon.classList.add('fa-eye');
     } else {
         passwordInput.type = 'password';
-        togglePassword.textContent = '👁';
+        eyeIcon.classList.remove('fa-eye');
+        eyeIcon.classList.add('fa-eye-slash');
     }
 });
 </script>

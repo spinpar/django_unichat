@@ -1,15 +1,9 @@
-/* ============================= */
-/* Estilos Base UniChat          */
-/* ============================= */
-
-/* Remove fundo azul ou cores pesadas */
 body {
     background-color: #f8f9fa;
     font-family: 'Arial', sans-serif;
     color: #212529;
 }
 
-/* Header */
 .header-principal {
     background-color: #fff;
     box-shadow: 0 2px 6px rgba(0,0,0,0.05);
@@ -18,7 +12,6 @@ body {
     z-index: 1000;
 }
 
-/* Navbar links */
 .nav-link {
     color: #495057;
     font-weight: 500;
@@ -29,7 +22,6 @@ body {
     color: #0d6efd;
 }
 
-/* Botões */
 .btn-primary {
     background-color: #0d6efd;
     border-color: #0d6efd;
@@ -51,7 +43,6 @@ body {
     color: #fff;
 }
 
-/* Search bar */
 .input-group .form-control {
     border-radius: 0 0.375rem 0.375rem 0;
 }
@@ -62,13 +53,11 @@ body {
 
 
 
-/* Footer */
 footer {
     font-size: 0.9rem;
     color: #6c757d;
 }
 
-/* Responsividade */
 @media (max-width: 768px) {
     .header-principal nav {
         flex-direction: column;
@@ -83,8 +72,6 @@ footer {
         justify-content: center;
     }
 }
-
-/* profile.css */
 
 .card {
     border-radius: 16px;
@@ -124,4 +111,3 @@ button.btn-primary {
     padding: 0.6rem;
     font-size: 1.05rem;
 }
-

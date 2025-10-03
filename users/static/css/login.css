@@ -1,149 +1,147 @@
-/* Reset básico */
+:root {
+    --cor-primaria: #0a4ebd;
+    --cor-primaria-hover: #083d9b;
+    --cor-secundaria: #4dbdec;
+    --cor-fundo: #f0f2f5;
+    --cor-fundo-form: #ffffff;
+    --cor-fundo-ponto: rgba(0, 0, 0, 0.08);
+    --cor-texto: #333;
+    --cor-texto-secundario: #666;
+    --cor-borda: #ccc;
+    --cor-sombra: rgba(0, 0, 0, 0.1);
+    --cor-erro-fundo: #f8d7da;
+    --cor-erro-texto: #842029;
+    --cor-branco: #fff;
+    --fonte-principal: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --raio-borda: 8px;
+    --transicao-suave: all 0.3s ease;
+}
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: var(--fonte-principal);
 }
 
-/* Fundo da página */
 body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    background-color: #ffffff;
-    background-image: radial-gradient(circle, rgba(0,0,0,0.1) 10%, transparent 10%), radial-gradient(circle, rgba(0,0,0,0.1) 10%, transparent 10%);
-    background-size: 10px 10px;
-    background-position: 0 0, 5px 5px;
+    min-height: 100vh;
+    padding: 20px;
+    transition: var(--transicao-suave);
+    background-color: var(--cor-fundo);
+    background-image: 
+        radial-gradient(circle at center, var(--cor-fundo-ponto) 1px, transparent 1px),
+        radial-gradient(circle at center, var(--cor-fundo-ponto) 1px, transparent 1px);
+    background-size: 15px 15px;
+    background-position: 0 0, 7.5px 7.5px;
 }
 
-/* Container do formulário */
 .login-form-container {
-    background: #ffffff;
-    padding: 30px 40px;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    background: var(--cor-fundo-form);
+    padding: 40px 30px;
+    border-radius: var(--raio-borda);
+    box-shadow: 0 5px 20px var(--cor-sombra);
     width: 100%;
     max-width: 400px;
     text-align: center;
+    transition: var(--transicao-suave);
 }
 
-/* Header */
 .login-header img.small-logo {
     width: 80px;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 .login-header h1 {
     font-size: 1.8rem;
-    margin-bottom: 5px;
-    color: #04347c;
+    margin-bottom: 10px;
+    color: var(--cor-primaria);
 }
 
 .login-header p {
-    font-size: 0.9rem;
-    color: #666;
-    margin-bottom: 25px;
+    font-size: 0.95rem;
+    color: var(--cor-texto-secundario);
+    margin-bottom: 30px;
 }
 
-/* Formulário */
 .login-form .form-group {
     margin-bottom: 20px;
-    position: relative; /* Para posicionar ícones */
     text-align: left;
 }
 
 .login-form label {
     display: block;
     font-size: 0.9rem;
-    margin-bottom: 5px;
-    color: #333;
+    margin-bottom: 8px;
+    color: var(--cor-texto);
 }
 
-/* Inputs com ícone */
 .login-form input[type="text"],
 .login-form input[type="password"] {
     width: 100%;
-    padding: 10px 12px 10px 36px; /* Espaço à esquerda para o ícone */
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    font-size: 0.95rem;
+    padding: 12px 15px;
+    border-radius: var(--raio-borda);
+    border: 1px solid var(--cor-borda);
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.password-wrapper {
+    position: relative;
+}
+
+.password-wrapper input {
+    width: 100%;
+    padding-right: 40px;
+}
+
+.password-wrapper button {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--cor-texto-secundario);
+    font-size: 1rem;
+    padding: 0;
+}
+
+.password-wrapper button:hover {
+    color: var(--cor-primaria);
 }
 
 .login-form input[type="text"]:focus,
-.login-form input[type="password"]:focus {
-    border-color: #04347c;
+.password-wrapper input:focus {
     outline: none;
+    border-color: var(--cor-primaria);
+    box-shadow: 0 0 0 3px rgba(10, 78, 189, 0.2);
 }
 
-/* Ícones nos inputs */
-.form-group.user-icon::before,
-.form-group.password-icon::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 10px;
-    transform: translateY(-50%);
-    width: 16px;
-    height: 16px;
-    background-size: contain;
-    background-repeat: no-repeat;
-}
-
-.form-group.user-icon::before {
-    background-image: url('../img/user-icon.svg'); /* Substitua pelo seu ícone de usuário */
-}
-
-.form-group.password-icon::before {
-    background-image: url('../img/lock-icon.svg'); /* Substitua pelo seu ícone de cadeado */
-}
-
-/* Toggle password */
-.password-wrapper {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-}
-
-#id_password {
-    padding-right: 40px; /* espaço para o olho */
-}
-
-#toggle-password {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 30px;
-    height: 30px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    cursor: pointer;
-    position: absolute;
-    right: 5px;
-    background-color: white;
-}
-
-/* Lembrar e link */
 .form-actions {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
-    font-size: 0.85rem;
+    margin-bottom: 25px;
+    font-size: 0.9rem;
 }
 
-.form-actions div {
+.form-actions .remember-me {
     display: flex;
     align-items: center;
 }
 
 .form-actions input[type="checkbox"] {
-    margin-right: 5px;
+    margin-right: 8px;
+    accent-color: var(--cor-primaria);
 }
 
 .form-actions a {
-    color: #04347c;
+    color: var(--cor-primaria);
     text-decoration: none;
 }
 
@@ -151,76 +149,74 @@ body {
     text-decoration: underline;
 }
 
-/* Botão */
-.login-form button {
+.login-form button[type="submit"] {
     width: 100%;
     padding: 12px;
     border: none;
-    border-radius: 8px;
-    background: #04347c;
-    color: #fff;
-    font-size: 1rem;
+    border-radius: var(--raio-borda);
+    background: var(--cor-primaria);
+    color: var(--cor-branco);
+    font-size: 1.1rem;
+    font-weight: bold;
     cursor: pointer;
-    transition: background 0.3s, transform 0.2s;
+    transition: var(--transicao-suave);
 }
 
-.login-form button:hover {
-    background: #032b5c;
-    transform: scale(1.05);
+.login-form button[type="submit"]:hover {
+    background: var(--cor-primaria-hover);
+    transform: translateY(-2px);
 }
 
-/* Link de cadastro */
 .signup-link {
-    font-size: 0.85rem;
-    margin-top: 15px;
+    font-size: 0.9rem;
+    margin-top: 20px;
 }
 
 .signup-link a {
-    color: #4dbdec;
+    color: var(--cor-secundaria);
     text-decoration: none;
+    font-weight: bold;
 }
 
 .signup-link a:hover {
     text-decoration: underline;
 }
 
-/* Tema escuro */
 body.dark-theme {
-    background-color: #1a1a1a;
-    background-image: radial-gradient(circle, rgba(255,255,255,0.1) 10%, transparent 10%), radial-gradient(circle, rgba(255,255,255,0.1) 10%, transparent 10%);
-    color: #e0e0e0;
+    --cor-primaria: #4dbdec;
+    --cor-primaria-hover: #3a9bbf;
+    --cor-secundaria: #0a4ebd;
+    --cor-fundo: #121212;
+    --cor-fundo-form: #1e1e1e;
+    --cor-fundo-ponto: rgba(255, 255, 255, 0.08);
+    --cor-texto: #e0e0e0;
+    --cor-texto-secundario: #a0a0a0;
+    --cor-borda: #444;
+    --cor-sombra: rgba(0, 0, 0, 0.4);
 }
 
-body.dark-theme .login-form-container {
-    background: rgba(50,50,50,0.9);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-}
-
-body.dark-theme .login-header h1,
-body.dark-theme .login-header p,
-body.dark-theme .login-form label,
-body.dark-theme .signup-link {
-    color: #e0e0e0;
-}
-
-body.dark-theme .form-actions a {
-    color: #4dbdec;
-}
-
-body.dark-theme .login-form button {
-    background: #4dbdec;
-}
-
-body.dark-theme .login-form button:hover {
-    background: #3a9bbf;
-}
-
-/* Alerta de erro */
 .alert {
-    background-color: #f8d7da;
-    color: #842029;
-    padding: 10px;
-    border-radius: 6px;
-    margin-bottom: 15px;
+    background-color: var(--cor-erro-fundo);
+    color: var(--cor-erro-texto);
+    padding: 12px;
+    border-radius: var(--raio-borda);
+    margin-bottom: 20px;
     font-size: 0.9rem;
+    text-align: left;
+}
+
+@media (max-width: 480px) {
+    .login-form-container {
+        padding: 25px 20px;
+    }
+
+    .login-header h1 {
+        font-size: 1.6rem;
+    }
+
+    .form-actions {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
 }
