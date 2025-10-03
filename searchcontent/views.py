@@ -9,8 +9,6 @@ def user_search(request):
     query = request.GET.get('q', '')
     if query:
         search_terms = query.split()
-        
-        # Filtros para usuários
         user_query_set = Q()
         for term in search_terms:
             user_query_set |= (
@@ -19,8 +17,6 @@ def user_search(request):
                 Q(last_name__icontains=term) |
                 Q(profile__course__name__icontains=term)
             )
-        
-        # Filtros para posts
         post_query_set = Q()
         for term in search_terms:
             post_query_set |= (
@@ -29,12 +25,10 @@ def user_search(request):
                 Q(author__last_name__icontains=term) |
                 Q(author__username__icontains=term)
             )
-
-        # Executa as consultas
         user_results = User.objects.filter(user_query_set).distinct().select_related('profile')
         post_results = Post.objects.filter(post_query_set).distinct().select_related('author__profile')
 
-        ｉf request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
     
             user_list = []
             for user in user_results:
