@@ -34,8 +34,8 @@ def user_search(request):
         user_results = User.objects.filter(user_query_set).distinct().select_related('profile')
         post_results = Post.objects.filter(post_query_set).distinct().select_related('author__profile')
 
-        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-            # Prepara os resultados para o JSON
+        ｉf request.headers.get('x-requested-with') == 'XMLHttpRequest':
+    
             user_list = []
             for user in user_results:
                 avatar_url = user.profile.avatar.url if user.profile.avatar else '/static/img/default_profile.png'
