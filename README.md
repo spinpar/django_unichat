@@ -37,8 +37,7 @@ cd unichat
 <p><strong>Observação:</strong> Adicione a pasta <code>venv/</code> ao <code>.gitignore</code> se ela já existir.</p>
 
 <h3>3. Instale as dependências</h3>
-<pre><code>pip install django pillow django-crispy-forms crispy-bootstrap5
-</code></pre>
+<pre><code>pip install django pillow django-crispy-forms crispy-bootstrap5 daphne channels</code></pre>
 
 <p>Para mais detalhes sobre a instalação do Django, consulte a <a href="https://docs.djangoproject.com/en/5.2/intro/install/">documentação oficial</a>.</p>
 
