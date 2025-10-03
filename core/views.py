@@ -1,33 +1,15 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
 from django.db.models import Q
-from posts.models import Post,Event
+from posts.models import Post, Vote, Event
 from posts.forms import PostForm, EventForm
 from chat.models import Room
+from django.urls import reverse
 
 @login_required
 def home(request):
-    if request.method == 'POST':
-        form_type = request.POST.get('form_type')
-
-        if form_type == 'post':
-            form = PostForm(request.POST, request.FILES)
-            if form.is_valid():
-                post = form.save(commit=False)
-                post.author = request.user
-                post.save()
-                return redirect('home')
-        elif form_type == 'event':
-            event_form = EventForm(request.POST, request.FILES)
-            if event_form.is_valid():
-                event = event_form.save(commit=False)
-                event.author = request.user
-                event.save()
-                return redirect('home')
-    form = PostForm()
-    event_form = EventForm()
     user_course_id = None
     if request.user.profile.course.exists():
         user_course_id = request.user.profile.course.first().id
@@ -60,20 +42,59 @@ def home(request):
 
 
     all_posts = list(teacher_posts) + list(student_posts)
-
-
     events = Event.objects.filter(author__profile__is_teacher=True).order_by('event_date', 'event_time')
-
     rooms = Room.objects.all()
 
     context = {
         'rooms': rooms,
         'posts': all_posts,
-        'form': form,
         'events': events,
-        'event_form': event_form,
     }
     return render(request, 'home.html', context)
+
+
+
+# posts/views.py
+
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from posts.forms import PostForm, EventForm
+
+
+@login_required
+def criar_pub(request):
+    """
+    Page where user can publish posts or events.
+    After submission, redirects to 'home' where content is displayed.
+    """
+    if request.method == 'POST':
+        form_type = request.POST.get('form_type')
+
+        if form_type == 'post':
+            form = PostForm(request.POST, request.FILES)
+            if form.is_valid():
+                post = form.save(commit=False)
+                post.author = request.user
+                post.save()
+                return redirect('home')
+
+        elif form_type == 'event':
+            event_form = EventForm(request.POST, request.FILES)
+            if event_form.is_valid():
+                event = event_form.save(commit=False)
+                event.author = request.user
+                event.save()
+                return redirect('home')
+
+    form = PostForm()
+    event_form = EventForm()
+
+    context = {
+        'form': form,
+        'event_form': event_form,
+    }
+    return render(request, 'pub_page.html', context)
 
 @login_required
 def editar_evento(request, pk):

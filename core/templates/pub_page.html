@@ -1,0 +1,255 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Criar Evento{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="pills-post-tab" data-bs-toggle="pill"
+                                data-bs-target="#pills-post" type="button" role="tab" aria-controls="pills-post"
+                                aria-selected="true">Postar</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="pills-event-tab" data-bs-toggle="pill"
+                                data-bs-target="#pills-event" type="button" role="tab" aria-controls="pills-event"
+                                aria-selected="false">Criar Evento</button>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="pills-tabContent">
+
+                        <div class="tab-pane fade show active" id="pills-post" role="tabpanel">
+                            <form method="post" action="{% url 'pub_page' %}" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <input type="hidden" name="form_type" value="post">
+                                <div class="d-flex align-items-start">
+                                    {% if request.user.profile.avatar %}
+                                    <img src="{{ request.user.profile.avatar.url }}" class="rounded-circle me-3"
+                                        width="50" height="50" alt="Avatar">
+                                    {% else %}
+                                    <img src="{% static 'img/default_profile.png' %}" class="rounded-circle me-3"
+                                        width="50" height="50" alt="Default Avatar">
+                                    {% endif %}
+                                    <div class="flex-grow-1">
+                                        <div class="mb-3">
+                                            <textarea class="form-control" name="content" rows="3"
+                                                placeholder="O que está acontecendo?"></textarea>
+                                        </div>
+                                        <div id="image-preview-container" class="mb-3" style="display: none;">
+                                            <img id="image-preview" src="#" alt="Pré-visualização da imagem"
+                                                class="img-fluid rounded post-image">
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="d-flex align-items-center position-relative">
+                                                <label for="id_image"
+                                                    class="btn btn-link p-0 me-2 text-decoration-none text-muted">
+                                                    <i class="fas fa-image fa-lg"></i>
+                                                </label>
+                                                <input type="file" name="image" id="id_image" accept="image/*"
+                                                    style="display: none;">
+                                                <button type="button"
+                                                    class="btn btn-link p-0 text-decoration-none text-muted emoji-button">
+                                                    <i class="fas fa-smile fa-lg"></i>
+                                                </button>
+                                                <div class="emoji-picker-dropdown" style="display: none;">
+                                                    <div class="emoji-grid">
+                                                        <span class="emoji" data-emoji="😀">😀</span>
+                                                        <span class="emoji" data-emoji="😂">😂</span>
+                                                        <span class="emoji" data-emoji="😍">😍</span>
+                                                        <span class="emoji" data-emoji="👍">👍</span>
+                                                        <span class="emoji" data-emoji="❤️">❤️</span>
+                                                        <span class="emoji" data-emoji="🎉">🎉</span>
+                                                        <span class="emoji" data-emoji="🤔">🤔</span>
+                                                        <span class="emoji" data-emoji="🔥">🔥</span>
+                                                        <span class="emoji" data-emoji="💯">💯</span>
+                                                        <span class="emoji" data-emoji="👏">👏</span>
+                                                        <span class="emoji" data-emoji="😂">😂</span>
+                                                        <span class="emoji" data-emoji="🤣">🤣</span>
+                                                        <span class="emoji" data-emoji="😎">😎</span>
+                                                        <span class="emoji" data-emoji="🥰">🥰</span>
+                                                        <span class="emoji" data-emoji="😜">😜</span>
+                                                        <span class="emoji" data-emoji="🤩">🤩</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">Postar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+
+                        <!-- Eventos -->
+                        <div class="tab-pane fade" id="pills-event" role="tabpanel" aria-labelledby="pills-event-tab">
+                            {% if request.user.profile.is_teacher %}
+                            <form method="post" action="{% url 'pub_page' %}" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <input type="hidden" name="form_type" value="event">
+
+                                <div class="d-flex align-items-start">
+                                    {% if request.user.profile.avatar %}
+                                    <img src="{{ request.user.profile.avatar.url }}" class="rounded-circle me-3"
+                                        width="50" height="50" alt="Avatar">
+                                    {% else %}
+                                    <img src="{% static 'img/default_profile.png' %}" class="rounded-circle me-3"
+                                        width="50" height="50" alt="Default Avatar">
+                                    {% endif %}
+
+                                    <div class="flex-grow-1">
+                                        <div class="mb-3">
+                                            {{ event_form.title }}
+                                        </div>
+
+                                        <div class="mb-3">
+                                            {{ event_form.description }}
+                                        </div>
+
+                                        <div class="mb-3">
+                                            {{ event_form.location }}
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                {{ event_form.event_date.label_tag }}
+                                                {{ event_form.event_date }}
+                                            </div>
+                                            <div class="col-md-6">
+                                                {{ event_form.event_time.label_tag }}
+                                                {{ event_form.event_time }}
+                                            </div>
+                                        </div>
+
+                                        <div id="image-preview-event-container" class="mb-3" style="display: none;">
+                                            <img id="image-preview-event" src="#"
+                                                alt="Pré-visualização da imagem do evento"
+                                                class="img-fluid rounded post-image">
+                                        </div>
+
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="d-flex align-items-center position-relative">
+                                                <label for="id_image_event"
+                                                    class="btn btn-link p-0 me-2 text-decoration-none text-muted">
+                                                    <i class="fas fa-image fa-lg"></i>
+                                                </label>
+                                                <input type="file" name="image" id="id_image_event" accept="image/*"
+                                                    style="display: none;">
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">Criar Evento</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            {% else %}
+                            <br>
+                            <p>Desculpa! Apenas professores são permitidos criar eventos.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Lógica de pré-visualização da imagem para o formulário de postagem
+        const fileInput = document.getElementById('id_image');
+        const previewContainer = document.getElementById('image-preview-container');
+        const previewImage = document.getElementById('image-preview');
+        // Lógica de pré-visualização da imagem para o formulário de EVENTO
+        const fileInputEvent = document.getElementById('id_image_event');
+        const previewContainerEvent = document.getElementById('image-preview-event-container');
+        const previewImageEvent = document.getElementById('image-preview-event');
+
+        if (fileInputEvent) {
+            fileInputEvent.addEventListener('change', function (event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        previewImageEvent.src = e.target.result;
+                        previewContainerEvent.style.display = 'block';
+                    }
+                    reader.readAsDataURL(file);
+                } else {
+                    previewContainerEvent.style.display = 'none';
+                    previewImageEvent.src = '#';
+                }
+            });
+        }
+        if (fileInput) { // Adicione esta verificação para evitar erros
+            fileInput.addEventListener('change', function (event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        previewImage.src = e.target.result;
+                        previewContainer.style.display = 'block';
+                    }
+                    reader.readAsDataURL(file);
+                } else {
+                    previewContainer.style.display = 'none';
+                    previewImage.src = '#';
+                }
+            });
+        }
+
+
+        // Lógica para o seletor de emojis 😃
+        const emojiButtons = document.querySelectorAll('.emoji-button');
+        emojiButtons.forEach(button => {
+            button.addEventListener('click', function (e) {
+                e.preventDefault();
+                const parentContainer = this.closest('.position-relative');
+                const emojiDropdown = parentContainer.querySelector('.emoji-picker-dropdown');
+                if (emojiDropdown) {
+                    document.querySelectorAll('.emoji-picker-dropdown').forEach(dropdown => {
+                        if (dropdown !== emojiDropdown) {
+                            dropdown.style.display = 'none';
+                        }
+                    });
+                    emojiDropdown.style.display = emojiDropdown.style.display === 'block' ? 'none' : 'block';
+                }
+            });
+        });
+        // Lógica para inserir o emoji na caixa de texto
+        const emojiItems = document.querySelectorAll('.emoji');
+        emojiItems.forEach(emojiItem => {
+            emojiItem.addEventListener('click', function () {
+                const form = this.closest('form');
+                // IMPORTANTE: Se o formulário de Evento tiver um campo de texto, você deve garantir que ele seja selecionado corretamente
+                // Para o post, a textarea tem name="content". Para o evento, se for o caso, ajuste o seletor.
+                // Como o emoji só está no formulário de Postar, mantemos o seletor:
+                const textarea = form.querySelector('textarea[name="content"]');
+                if (textarea) {
+                    const emoji = this.getAttribute('data-emoji');
+                    const start = textarea.selectionStart;
+                    const end = textarea.selectionEnd;
+                    textarea.value = textarea.value.substring(0, start) + emoji + textarea.value.substring(end);
+                    textarea.focus();
+                    textarea.selectionStart = textarea.selectionEnd = start + emoji.length;
+                    this.closest('.emoji-picker-dropdown').style.display = 'none';
+                }
+            });
+        });
+        // Lógica para fechar o dropdown de emoji ao clicar fora dele
+        document.addEventListener('click', function (e) {
+            if (!e.target.closest('.emoji-picker-dropdown') && !e.target.closest('.emoji-button')) {
+                document.querySelectorAll('.emoji-picker-dropdown').forEach(dropdown => {
+                    dropdown.style.display = 'none';
+                });
+            }
+        });
+    })
+</script>
+{% endblock %}
