@@ -6,7 +6,6 @@
     <title>Login - UniChat</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
- 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body>
@@ -42,7 +41,7 @@
         </div>
 
         <div class="form-actions">
-            <div>
+            <div class="remember-me">
                 {{ form.remember_me }}
                 {{ form.remember_me.label_tag }}
             </div>
@@ -62,7 +61,6 @@ const eyeIcon = togglePasswordButton.querySelector('i');
 
 togglePasswordButton.addEventListener('click', () => {
     const isPassword = passwordInput.type === 'password';
-
     if (isPassword) {
         passwordInput.type = 'text';
         eyeIcon.classList.remove('fa-eye-slash');

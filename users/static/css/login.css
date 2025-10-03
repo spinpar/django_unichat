@@ -69,7 +69,6 @@ body {
 
 .login-form .form-group {
     margin-bottom: 20px;
-    position: relative;
     text-align: left;
 }
 
@@ -87,40 +86,40 @@ body {
     border-radius: var(--raio-borda);
     border: 1px solid var(--cor-borda);
     font-size: 1rem;
-    transition: var(--transicao-suave);
-}
-
-.login-form input[type="text"]:focus,
-.login-form input[type="password"]:focus {
-    outline: none;
-    border-color: var(--cor-primaria);
-    box-shadow: 0 0 0 3px rgba(10, 78, 189, 0.2);
+    box-sizing: border-box;
 }
 
 .password-wrapper {
     position: relative;
 }
 
-.login-form input[type="password"] {
-    padding-right: 45px;
+.password-wrapper input {
+    width: 100%;
+    padding-right: 40px;
 }
 
-#toggle-password {
+.password-wrapper button {
     position: absolute;
-    right: 15px;
+    right: 10px;
     top: 50%;
     transform: translateY(-50%);
     background: transparent;
     border: none;
     cursor: pointer;
     color: var(--cor-texto-secundario);
-    font-size: 1.1rem;
+    font-size: 1rem;
     padding: 0;
-    transition: color 0.2s ease;
 }
 
-#toggle-password:hover {
+.password-wrapper button:hover {
     color: var(--cor-primaria);
+}
+
+.login-form input[type="text"]:focus,
+.password-wrapper input:focus {
+    outline: none;
+    border-color: var(--cor-primaria);
+    box-shadow: 0 0 0 3px rgba(10, 78, 189, 0.2);
 }
 
 .form-actions {
@@ -150,7 +149,7 @@ body {
     text-decoration: underline;
 }
 
-.login-form button {
+.login-form button[type="submit"] {
     width: 100%;
     padding: 12px;
     border: none;
@@ -163,7 +162,7 @@ body {
     transition: var(--transicao-suave);
 }
 
-.login-form button:hover {
+.login-form button[type="submit"]:hover {
     background: var(--cor-primaria-hover);
     transform: translateY(-2px);
 }
@@ -214,7 +213,7 @@ body.dark-theme {
     .login-header h1 {
         font-size: 1.6rem;
     }
-    
+
     .form-actions {
         flex-direction: column;
         align-items: flex-start;
