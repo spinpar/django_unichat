@@ -1,9 +1,7 @@
 import json 
 from channels.generic.websocket import AsyncWebsocketConsumer
 
-connected_users = {}
-
-# REDIS_URL = 'redis://127.0.0.1:6379'
+conn_users = {}
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -15,32 +13,42 @@ class ChatConsumer(AsyncWebsocketConsumer):
         # Join room group
         await self.channel_layer.group_add(self.room_group_name, self.channel_name)
 
-        # #track user in redis
-        # self.redis = await aioredis.from_url(REDIS_URL, decode_response=True)
-        # await self.redis.sadd(f"chatroom:{self.room_name}:users", self.user.username)
-
+        conn_users.setdefault(self.room_name, set()).add(self.user.username)
         await self.accept()
 
+        #send list
+        await self.channel_layer.group_send(
+            self.room_group_name, {"type": "user_list",
+                                   "users": list(conn_users[self.room_name])}
+        )
+
     async def disconnect(self, close_code):
+        #clean list when user leaves
+        if self.room_name in conn_users:
+            conn_users[self.room_name].discard(self.user.username)
+
+            #send new list updated
+            await self.channel_layer.group_send(
+                self.room_group_name, {"type": "user_list",
+                                       "users": list(conn_users[self.room_name])}
+            )
+
         # Leave room group
         await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
 
-        # #romove from redis
-        # await self.redis.srem(f"chatroom:{self.room_name}:users", self.user.username)
+     
 
     # Receive message from WebSocket
     async def receive(self, text_data):
         data = json.loads(text_data)
         ms = data["message"]
         username = self.scope['user'].username
-        # users = await self.redis.smembers(f"chatroom:{self.room_name}:users")
        
         # Send message to room group
         await self.channel_layer.group_send(
             self.room_group_name, {"type": "chat.message", 
                                    "message": ms,
                                    "username": username,
-                                #    "users": list(users),
                                    })
 
     # Receive message from room group
@@ -52,7 +60,13 @@ class ChatConsumer(AsyncWebsocketConsumer):
             is_from_me = True
         else:
             is_from_me = False
-        await self.send(text_data=json.dumps({"message": ms,
+        await self.send(text_data=json.dumps({"type":"chat",
+                                              "message": ms,
                                               "username": user,
                                               "is_from_me": is_from_me,
                                               }))
+    async def user_list(self, event):
+        await self.send(text_data=json.dumps({
+            "type": "users",
+            "users": event["users"],
+        }))

@@ -1,6 +1,15 @@
+:root {
+    --cor-primaria: #0a4ebd;
+    --cor-primaria-hover: #083d9b;
+  
+    --cor-fundo: #f0f2f5;
+    --cor-fundo-form: #ffffff;
+    --cor-fundo-ponto: rgba(0, 0, 0, 0.08);
+}
+
 /* Body chat container */
 .body-chat {
-  background-color: #f0f2f5;
+  background-color: #f0f2f50a;
   display: flex;
   height: 100vh;
   flex-wrap: wrap; /* allows wrapping on small screens */
@@ -10,8 +19,7 @@
 .sidebar {
   width: 250px;
   min-width: 200px;
-  background-color: #075e54;
-  color: white;
+  background-color: #fff;
   display: flex;
   flex-direction: column;
   padding: 10px 0;
@@ -34,10 +42,12 @@
 .user {
   display: flex;
   align-items: center;
+  color: #0D6EFD;
   gap: 10px;
   padding: 10px 15px;
   cursor: pointer;
   transition: background 0.2s;
+  font-weight: bold;
 }
 
 .user:hover {
@@ -65,27 +75,34 @@
   max-height: 100vh;
   border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.);
   margin: 10px; /* spacing on mobile */
+}
+.chat-container h2 {
+  padding: 15px;
 }
 
 /* Chat header */
 .chat-header {
-  padding: 12px 20px;
-  background-color: #ededed;
-  border-bottom: 1px solid #ccc;
-  font-weight: bold;
+  padding: 10px 20px;
+  background-color: rgba(199, 221, 253, 0.5);
 }
 
 /* Chat messages */
 .chat-messages {
   flex: 1;
   padding: 15px 20px;
-  background-color: #e5ddd5;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 12px;
+  background-color: var(--cor-fundo);
+  background-image: 
+      radial-gradient(circle at center, var(--cor-fundo-ponto) 1px, transparent 1px),
+      radial-gradient(circle at center, var(--cor-fundo-ponto) 1px, transparent 1px);
+  background-size: 15px 15px;
+  background-position: 0 0, 7.5px 7.5px;
+
 }
 
 /* Messages */
@@ -108,10 +125,12 @@
 
 .sent {
   align-self: flex-end;
-  background-color: #dcf8c6;
+  background-color: #c7ddfd;
   border-bottom-right-radius: 0;
 }
-
+/* .sent strong {
+  color: #000000;
+} */
 .received {
   align-self: flex-start;
   background-color: #fff;
@@ -122,7 +141,7 @@
 .chat-input {
   display: flex;
   padding: 10px;
-  background-color: #f0f0f0;
+  background-color: #c7ddfd;
   border-top: 1px solid #ccc;
 }
 
@@ -136,7 +155,7 @@
 }
 
 .chat-input button {
-  background-color: #075e54;
+  background-color: #0a4ebd;
   color: white;
   border: none;
   padding: 0 16px;
@@ -147,7 +166,7 @@
 }
 
 .chat-input button:hover {
-  background-color: #0a7667;
+  background-color:#083d9b;
 }
 
 /* ---------------- Responsive Design ---------------- */
